@@ -22,3 +22,8 @@ function createImage(filepath)
 	
 	return newImg;
 }
+
+function createImageUsingFilename(filename)
+{
+	return createImage(createImageFilePath(filename));
+}
