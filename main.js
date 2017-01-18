@@ -1,94 +1,7 @@
 var theRenderer = null;
 var resources = {};
 var platforms = [];
-
-function Platform(widthUnits, heightUnits, groundImages)
-{
-	this.tiles = [];
-	this.x = 0;
-	this.y = 0;
-	this.width = defaultTileWidth * widthUnits;
-	this.height = defaultTileHeight * heightUnits;
-	this.isOnScreen = true;
-	
-	for (var x = 0; x < widthUnits; ++x)
-	{
-		for (var y = 0; y < heightUnits; ++y)
-		{
-			var img = null;
-			
-			if (x === 0)
-			{
-				if (y === 0)
-				{
-					img = groundImages.topLeft;
-				}
-				else
-				{
-					img = groundImages.left;
-				}
-			}
-			else if (x === (widthUnits - 1))
-			{
-				if (y === 0)
-				{
-					img = groundImages.topRight;
-				}
-				else
-				{
-					img = groundImages.right;
-				}
-			}
-			else
-			{
-				if (y === 0)
-				{
-					img = groundImages.topMiddle;
-				}
-				else
-				{
-					img = groundImages.middle;
-				}
-			}
-			
-			var tile = new EnvTile(img);
-			tile.x = x * defaultTileWidth;
-			tile.y = y * defaultTileHeight;
-			tile.width = defaultTileWidth;
-			tile.height = defaultTileHeight;
-			this.tiles.push(tile);
-		}
-	}
-	
-	this.update = function(renderer)
-	{
-		this.x -= 2;
-		
-		this.isOnScreen = (this.x + this.width) > 0;
-	};
-	
-	this.draw = function(renderer)
-	{
-		var ctx = renderer.context;
-		ctx.save();
-		
-		ctx.translate(this.x, this.y);
-		
-		this.tiles.forEach(function(tile)
-		{
-			tile.draw(renderer);
-		});
-		
-		ctx.restore();
-	};
-}
-
-function getRandomInt(min, max)
-{
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min)) + min;
-}
+var background = null;
 
 function createPlatform(groundImages)
 {
@@ -105,15 +18,14 @@ function createPlatform(groundImages)
 function init()
 {
 	var canvas = document.getElementById("TheCanvas");
+	
 	theRenderer = new Renderer(canvas);
 	
-	resources.ground = {};
-	resources.ground.topLeft	= createImageUsingFilename("1");
-	resources.ground.topMiddle	= createImageUsingFilename("2");
-	resources.ground.topRight	= createImageUsingFilename("3");
-	resources.ground.left		= createImageUsingFilename("4");
-	resources.ground.middle		= createImageUsingFilename("5");
-	resources.ground.right		= createImageUsingFilename("6");
+	resources = new Resources();
+	
+	background = new EnvTile(resources.background);
+	background.width = 1000;
+	background.height = 750;
 	
 	platforms.push(createPlatform(resources.ground));
 }
@@ -162,7 +74,9 @@ function update()
 
 function draw()
 {
-    theRenderer.clearScreen();
+    //theRenderer.clearScreen();
+	
+	drawObject(background);
 
 	forEachObject(platforms, drawObject);
 }

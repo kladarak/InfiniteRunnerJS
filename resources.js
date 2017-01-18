@@ -1,11 +1,4 @@
-var tilesAssetPath = "freetileset/png/Tiles/";
-
 var numResourcesLoading = 0;
-
-function createImageFilePath(filename)
-{
-	return tilesAssetPath + filename + ".png";
-}
 
 function createImage(filepath)
 {
@@ -23,7 +16,18 @@ function createImage(filepath)
 	return newImg;
 }
 
-function createImageUsingFilename(filename)
+function Resources()
 {
-	return createImage(createImageFilePath(filename));
+	var tilesAssetPath		= "freetileset/png/Tiles/";
+	var bgAssetPath			= "freetileset/png/BG/";
+
+	this.ground = {}
+	this.ground.topLeft		= createImage(tilesAssetPath + "1.png");
+	this.ground.topMiddle	= createImage(tilesAssetPath + "2.png");
+	this.ground.topRight	= createImage(tilesAssetPath + "3.png");
+	this.ground.left		= createImage(tilesAssetPath + "4.png");
+	this.ground.middle		= createImage(tilesAssetPath + "5.png");
+	this.ground.right		= createImage(tilesAssetPath + "6.png");
+	
+	this.background			= createImage(bgAssetPath + "BG.png");
 }

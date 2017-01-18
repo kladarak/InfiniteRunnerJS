@@ -1,26 +1,18 @@
-var defaultTileWidth = 50;
-var defaultTileHeight = 50;
+
 
 function EnvTile(inImage)
 {
 	this.x = 0;
 	this.y = 0;
-	this.width = defaultTileWidth;
-	this.height = defaultTileHeight;
-	this.dx = -1;
-	this.dy = 0;
+	this.width = 10;
+	this.height = 10;
 	
 	this.img = inImage;
 	
 	this.update = function(theRenderer)
 	{
-		this.x += this.dx;
 		
-		if (this.x < -this.width)
-		{
-			this.x += theRenderer.screenWidth + this.width;
-		}
-	};
+	}
 	
 	this.draw = function(theRenderer)
 	{
