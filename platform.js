@@ -81,3 +81,15 @@ function Platform(widthUnits, heightUnits, groundImages)
 		ctx.restore();
 	};
 }
+
+function createRandomPlatform(groundImages, renderer)
+{
+	var widthUnits = getRandomInt(2, 20);
+	var heightUnits = getRandomInt(1, 8);
+	
+	var platform = new Platform(widthUnits, heightUnits, groundImages);
+	platform.x = renderer.screenWidth;
+	platform.y = renderer.screenHeight - platform.height;
+	
+	return platform;
+}

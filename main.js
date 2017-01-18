@@ -3,18 +3,6 @@ var resources = {};
 var platforms = [];
 var background = null;
 
-function createPlatform(groundImages)
-{
-	var widthUnits = getRandomInt(2, 20);
-	var heightUnits = getRandomInt(1, 8);
-	
-	var platform = new Platform(widthUnits, heightUnits, groundImages);
-	platform.x = renderer.screenWidth;
-	platform.y = renderer.screenHeight - platform.height;
-	
-	return platform;
-}
-
 function init()
 {
 	var canvas = document.getElementById("TheCanvas");
@@ -27,7 +15,7 @@ function init()
 	background.width = 1000;
 	background.height = 750;
 	
-	platforms.push(createPlatform(resources.ground));
+	platforms.push(createRandomPlatform(resources.ground, renderer));
 }
 
 function updateObject(inObject)
@@ -68,7 +56,7 @@ function update()
 	
 	if (shouldCreateAnotherPlatform)
 	{
-		platforms.push(createPlatform(resources.ground));
+		platforms.push(createRandomPlatform(resources.ground, renderer));
 	}
 }
 
