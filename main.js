@@ -1,4 +1,4 @@
-var theRenderer = null;
+var renderer = null;
 var resources = {};
 var platforms = [];
 var background = null;
@@ -9,8 +9,8 @@ function createPlatform(groundImages)
 	var heightUnits = getRandomInt(1, 8);
 	
 	var platform = new Platform(widthUnits, heightUnits, groundImages);
-	platform.x = theRenderer.screenWidth;
-	platform.y = theRenderer.screenHeight - platform.height;
+	platform.x = renderer.screenWidth;
+	platform.y = renderer.screenHeight - platform.height;
 	
 	return platform;
 }
@@ -19,7 +19,7 @@ function init()
 {
 	var canvas = document.getElementById("TheCanvas");
 	
-	theRenderer = new Renderer(canvas);
+	renderer = new Renderer(canvas);
 	
 	resources = new Resources();
 	
@@ -32,12 +32,12 @@ function init()
 
 function updateObject(inObject)
 {
-	inObject.update(theRenderer);
+	inObject.update(renderer);
 }
 
 function drawObject(inObject)
 {
-	inObject.draw(theRenderer);
+	inObject.draw(renderer);
 }
 
 function forEachObject(inObjects, inFunc)
@@ -61,7 +61,7 @@ function update()
 	{
 		var lastPlatform = platforms[platforms.length - 1];
 		var platformRight = lastPlatform.x + lastPlatform.width;
-		var distanceFromScreenRight = theRenderer.screenWidth - platformRight;
+		var distanceFromScreenRight = renderer.screenWidth - platformRight;
 		
 		shouldCreateAnotherPlatform = (distanceFromScreenRight >= defaultTileWidth);
 	}
@@ -74,7 +74,7 @@ function update()
 
 function draw()
 {
-    //theRenderer.clearScreen();
+    //renderer.clearScreen();
 	
 	drawObject(background);
 
