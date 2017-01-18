@@ -1,12 +1,11 @@
-
-var ball = 
+function Ball()
 {
-	x: 0,
-	y: 0,
-	dx: 7,
-	dy: 13,
+	this.x = 0;
+	this.y = 0;
+	this.dx = 7;
+	this.dy = 13;
 	
-	update: function (renderer)
+	this.update = function(renderer)
 	{	
 		this.x += this.dx;
 		this.y += this.dy;
@@ -34,9 +33,9 @@ var ball =
 			this.y = -this.y;
 			this.dy = -this.dy;
 		}
-	},
+	};
 	
-	draw: function(renderer)
+	this.draw = function(renderer)
 	{
 		var ctx = renderer.context;
 		
@@ -45,5 +44,5 @@ var ball =
 		ctx.fillStyle = "#0095DD";
 		ctx.fill();
 		ctx.closePath();
-	}
-};
+	};
+}

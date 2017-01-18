@@ -1,19 +1,18 @@
-
 var defaultTileWidth = 50;
 var defaultTileHeight = 50;
 
-var envTile =
+function EnvTile(inImage)
 {
-	x: 0,
-	y: 0,
-	width: defaultTileWidth,
-	height: defaultTileHeight,
-	dx: -1,
-	dy: 0,
+	this.x = 0;
+	this.y = 0;
+	this.width = defaultTileWidth;
+	this.height = defaultTileHeight;
+	this.dx = -1;
+	this.dy = 0;
 	
-	img: null,
+	this.img = inImage;
 	
-	update: function(theRenderer)
+	this.update = function(theRenderer)
 	{
 		this.x += this.dx;
 		
@@ -21,13 +20,13 @@ var envTile =
 		{
 			this.x += theRenderer.screenWidth + this.width;
 		}
-	},
+	};
 	
-	draw: function(theRenderer)
+	this.draw = function(theRenderer)
 	{
 		if (this.img)
 		{
 			theRenderer.context.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
-	}
-};
+	};
+}

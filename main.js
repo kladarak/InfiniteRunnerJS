@@ -1,4 +1,3 @@
-
 var theRenderer = null;
 var resources = {};
 var objects = [];
@@ -10,12 +9,11 @@ function init()
 	
 	resources.grassTile = createImage(createImageFilePath("2"));
 	
-	objects.push(ball);
+	objects.push(new Ball());
 	
 	for (var i = 0; i < (theRenderer.screenWidth / defaultTileWidth) + 1; ++i)
 	{
-		var tile = Object.create(envTile);
-		tile.img = resources.grassTile;
+		var tile = new EnvTile(resources.grassTile);
 		tile.x = i * defaultTileWidth;
 		tile.y = theRenderer.screenHeight - defaultTileHeight;
 		objects.push(tile);
@@ -30,15 +28,9 @@ function update()
 	}
 }
 
-function clearScreen()
-{
-	// TODO: Put this on the renderer
-    theRenderer.context.clearRect(0, 0, theRenderer.screenWidth, theRenderer.screenHeight);
-}
-
 function draw()
 {
-	clearScreen();
+    theRenderer.clearScreen();
 
 	for (var i = 0; i < objects.length; ++i)
 	{
