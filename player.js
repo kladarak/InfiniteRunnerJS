@@ -31,7 +31,7 @@ function Player()
 		}
 	}
 	
-	this.update = function(renderer, platforms)
+	this.update = function(world)
 	{
 		var gravity = 1.0;
 		
@@ -52,7 +52,7 @@ function Player()
 		
 		var runningOnPlatform = null;
 		
-		for (let platform of platforms)
+		for (let platform of world.platforms)
 		{
 			if (this.x >= platform.x && this.x <= platform.x + platform.width)
 			{
@@ -80,7 +80,7 @@ function Player()
 			this.y = nextY - this.radius;
 		}
 		
-		if (this.y > renderer.screenHeight)
+		if (this.y > world.renderer.screenHeight)
 		{
 			// reset player
 			this.state = playerStates.fall;

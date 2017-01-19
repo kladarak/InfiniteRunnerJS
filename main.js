@@ -1,15 +1,19 @@
-var renderer = null;
-var resources = {};
-
-var background = null;
-var platforms = [];
-var player = null;
+var world =
+{
+	background: null,
+	platforms: [],
+	player: null,
+	hud: null,
+	
+	renderer: null,
+	resources: null,
+};
 
 function onKeyDown(e)
 {
 	if (e.keyCode == 32)
 	{
-		player.setJumping(true);
+		world.player.setJumping(true);
 	}
 }
 
@@ -17,7 +21,7 @@ function onKeyUp(e)
 {
 	if (e.keyCode == 32)
 	{
-		player.setJumping(false);
+		world.player.setJumping(false);
 	}
 }
 
@@ -25,29 +29,31 @@ function init()
 {
 	var canvas = document.getElementById("TheCanvas");
 	
-	renderer = new Renderer(canvas);
-	resources = new Resources();
+	world.renderer = new Renderer(canvas);
+	world.resources = new Resources();
 	
-	background = new EnvTile(resources.background);
-	background.width = 1000;
-	background.height = 750;
+	world.background = new EnvTile(world.resources.background);
+	world.background.width = 1000;
+	world.background.height = 750;
 	
-	var firstPlatform = new Platform(20, 3, resources.ground);
+	var firstPlatform = new Platform(20, 3, world.resources.ground);
 	firstPlatform.x = 0;
-	firstPlatform.y = renderer.screenHeight - firstPlatform.height;
-	platforms.push(firstPlatform);
+	firstPlatform.y = world.renderer.screenHeight - firstPlatform.height;
+	world.platforms.push(firstPlatform);
 	
-	player = new Player();
+	world.player = new Player();
+	
+	world.hud = new Hud();
 }
 
 function updateObject(inObject)
 {
-	inObject.update(renderer);
+	inObject.update(world.renderer);
 }
 
 function drawObject(inObject)
 {
-	inObject.draw(renderer);
+	inObject.draw(world.renderer);
 }
 
 function forEachObject(inObjects, inFunc)
@@ -57,42 +63,44 @@ function forEachObject(inObjects, inFunc)
 
 function update()
 {
-	forEachObject(platforms, updateObject);
+	forEachObject(world.platforms, updateObject);
 	
 	// TODO: Will the discarded platforms get GC'd?
-	platforms = platforms.filter(function(platform)
+	world.platforms = world.platforms.filter(function(platform)
 	{
 		return platform.isOnScreen;
 	});
 	
 	var shouldCreateAnotherPlatform = true;
 	
-	if (platforms.length > 0)
+	if (world.platforms.length > 0)
 	{
-		var lastPlatform = platforms[platforms.length - 1];
+		var lastPlatform = world.platforms[world.platforms.length - 1];
 		var platformRight = lastPlatform.x + lastPlatform.width;
-		var distanceFromScreenRight = renderer.screenWidth - platformRight;
+		var distanceFromScreenRight = world.renderer.screenWidth - platformRight;
 		
 		shouldCreateAnotherPlatform = (distanceFromScreenRight >= defaultTileWidth);
 	}
 	
 	if (shouldCreateAnotherPlatform)
 	{
-		platforms.push(createRandomPlatform(resources.ground, renderer));
+		world.platforms.push(createRandomPlatform(world.resources.ground, world.renderer));
 	}
 	
-	player.update(renderer, platforms);
+	world.player.update(world);
+	world.hud.update(world);
 }
 
 function draw()
 {
     //renderer.clearScreen();
-	
-	drawObject(background);
+	drawObject(world.background);
 
-	forEachObject(platforms, drawObject);
+	forEachObject(world.platforms, drawObject);
 	
-	drawObject(player);
+	drawObject(world.player);
+	
+	drawObject(world.hud);
 }
 
 function tick()
