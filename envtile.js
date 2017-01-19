@@ -1,5 +1,3 @@
-
-
 function EnvTile(inImage)
 {
 	this.x = 0;
@@ -9,16 +7,16 @@ function EnvTile(inImage)
 	
 	this.img = inImage;
 	
-	this.update = function(theRenderer)
+	this.update = function(renderer)
 	{
 		
 	}
 	
-	this.draw = function(theRenderer)
+	this.draw = function(renderer)
 	{
 		if (this.img)
 		{
-			theRenderer.context.drawImage(this.img, this.x, this.y, this.width, this.height);
+			renderer.context.drawImage(this.img, this.x, this.y, this.width, this.height);
 		}
 	};
 }

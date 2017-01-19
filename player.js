@@ -5,18 +5,25 @@ var playerStates =
 	fall: "fall",
 };
 
-function Player()
+var playerConstants =
+{
+	normalGravity: 0.7,
+	jumpGravity: 0.2,
+	maxYVelocity: 6,
+	jumpThrust: -10,
+};
+
+function Player(world)
 {
 	this.x = 100;
 	this.y = 200;
-	this.width = 20;
-	this.height = 20;
-	this.radius = 10;
-	this.color = "green";
+	this.width = 100;
+	this.height = 100;
 	this.isAlive = true;
 	this.score = 0;
 
 	this.state = playerStates.run;
+	this.sprite = new AnimatedSprite(world.resources.cat.running);
 	
 	this.yVel = 0;
 	
@@ -24,14 +31,19 @@ function Player()
 	{
 		if (isJumping && this.state === playerStates.run)
 		{
-			this.yVel = -10;
+			this.yVel = playerConstants.jumpThrust;
 			this.state = playerStates.jump;
 		}
 		else if (!isJumping)
 		{
 			this.state = playerStates.fall;
 		}
-	}
+	};
+	
+	this.isJumping = function()
+	{
+		return this.state === playerStates.jump;
+	};
 	
 	this.update = function(world)
 	{
@@ -42,31 +54,23 @@ function Player()
 		
 		this.score += 1;
 		
-		var gravity = 1.0;
-		
-		if (this.state === playerStates.jump)
-		{
-			gravity = 0.2;
-		}
+		var gravity = this.isJumping() ? playerConstants.jumpGravity : playerConstants.normalGravity;
 		
 		this.yVel += gravity;
+		this.yVel = Math.min(this.yVel, playerConstants.maxYVelocity);
 		
-		if (this.yVel > 10)
-		{
-			this.yVel = 10;
-		}
-		
-		var prevY = this.y + this.radius;
-		var nextY = prevY + this.yVel;
+		var prevBotY = this.y + this.height;
+		var nextBotY = prevBotY + this.yVel;
+		var centreX = this.x + (this.width / 2);
 		
 		var runningOnPlatform = null;
 		
 		for (let platform of world.platforms)
 		{
-			if (this.x >= platform.x && this.x <= platform.x + platform.width)
+			if (centreX >= platform.x && centreX <= platform.x + platform.width)
 			{
 				// check if bottom of player falls through platform
-				if (prevY <= platform.y && nextY >= platform.y)
+				if (prevBotY <= platform.y && nextBotY >= platform.y)
 				{
 					runningOnPlatform = platform;
 				}
@@ -76,7 +80,7 @@ function Player()
 		if (runningOnPlatform)
 		{
 			this.state = playerStates.run;
-			this.y = runningOnPlatform.y - this.radius;
+			this.y = runningOnPlatform.y - this.height;
 			this.yVel = 0;
 		}
 		else
@@ -86,20 +90,20 @@ function Player()
 				this.state = playerStates.fall;
 			}
 			
-			this.y = nextY - this.radius;
+			this.y = nextBotY - this.height;
 		}
 		
-		this.isAlive = (this.y - this.radius) < world.renderer.screenHeight;
+		this.isAlive = this.y < world.renderer.screenHeight;
+		
+		this.sprite.update(world);
 	}
 	
 	this.draw = function(renderer)
 	{
-		var ctx = renderer.context;
-		
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-		ctx.fillStyle = this.color;
-		ctx.fill();
-		ctx.closePath();
+		this.sprite.x 		= this.x;
+		this.sprite.y 		= this.y;
+		this.sprite.width	= this.width;
+		this.sprite.height	= this.height;
+		this.sprite.draw(renderer);
 	}
 }

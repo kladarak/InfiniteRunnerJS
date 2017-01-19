@@ -33,7 +33,7 @@ function restartGame()
 	world.platformSpawner = new PlatformSpawner();
 	world.platformUpdater = new PlatformUpdater();
 	
-	world.player = new Player();
+	world.player = new Player(world);
 	
 	gameState = gameStates.running;
 }
