@@ -5,8 +5,14 @@ var world =
 	platformSpawner: null,
 	platformUpdater: null,
 	player: null,
+	
+	characterSelectScreen: null,
 	scoreDisplay: null,
 	gameOverScreen: null,
+
+	catModel: null,
+	dogModel: null,
+	selectedModel: null,
 	
 	resources: null,
 	renderer: null,
@@ -14,9 +20,10 @@ var world =
 
 var gameStates =
 {
-	loading: "loading",
-	running: "running",
-	gameover: "gameover",
+	loading:			"loading",
+	characterSelect:	"characterSelect",
+	running:			"running",
+	gameover:			"gameover",
 };
 
 var gameState = gameStates.loading;
@@ -33,15 +40,28 @@ function restartGame()
 	world.platformSpawner = new PlatformSpawner();
 	world.platformUpdater = new PlatformUpdater();
 	
-	var catModel = new CharacterModel(world.resources.cat);
-	world.player = new Player(catModel);
-	
-	gameState = gameStates.running;
+	world.player = new Player(world.selectedModel);
 }
 
 function onKeyDown(e)
 {
-	if (gameState === gameStates.running)
+	if (gameState === gameStates.characterSelect)
+	{
+		if (e.keyCode == 67)
+		{
+			world.selectedModel = world.catModel;
+		}
+		else if (e.keyCode == 68)
+		{
+			world.selectedModel = world.dogModel;
+		}
+		else if (e.keyCode == 32)
+		{
+			restartGame();
+			gameState = gameStates.running;
+		}
+	}
+	else if (gameState === gameStates.running)
 	{
 		if (e.keyCode == 32)
 		{
@@ -50,7 +70,7 @@ function onKeyDown(e)
 	}
 	else if (gameState === gameStates.gameover)
 	{
-		restartGame();
+		gameState = gameStates.characterSelect;
 	}
 }
 
@@ -79,12 +99,20 @@ function init()
 	world.scoreDisplay = new ScoreDisplay();
 	world.gameOverScreen = new GameOverScreen();
 	
-	restartGame();
+	world.catModel = new CharacterModel(world.resources.cat);
+	world.dogModel = new CharacterModel(world.resources.dog);
+	world.selectedModel = world.catModel;
+	
+	world.characterSelectScreen = new CharacterSelectScreen(world);
 }
 
 function update()
 {
-	if (gameState === gameStates.running)
+	if (gameState === gameStates.characterSelect)
+	{
+		world.characterSelectScreen.update(world);
+	}
+	else if (gameState === gameStates.running)
 	{
 		world.platformUpdater.update(world);
 		world.platformSpawner.update(world);
@@ -108,13 +136,15 @@ function draw()
 	var renderer = world.renderer;
 	
 	world.background.draw(renderer);
-
 	world.platforms.forEach(function (p) { p.draw(renderer); });
 	
-	world.player.draw(renderer);
-	
-	if (gameState === gameStates.running)
+	if (gameState === gameStates.characterSelect)
 	{
+		world.characterSelectScreen.draw(renderer);
+	}
+	else if (gameState === gameStates.running)
+	{
+		world.player.draw(renderer);
 		world.scoreDisplay.draw(renderer);
 	}
 	else if (gameState === gameStates.gameover)
@@ -137,5 +167,7 @@ function tick()
 function main()
 {
 	init();
+	gameState = gameStates.characterSelect;
+	
 	setInterval(tick, 10);
 }

@@ -29,12 +29,31 @@ function createImageSpriteSet(prefixFilepath, suffixFilepath, count)
 	return imageSpriteSet;
 }
 
+function createAnimalSpriteSets(assetPath)
+{
+	var animal = {};
+	
+	animal.dead			= createImageSpriteSet(assetPath + "Dead (", ").png", 10);
+	animal.fall			= createImageSpriteSet(assetPath + "Fall (", ").png", 8);
+	animal.hurt			= createImageSpriteSet(assetPath + "Hurt (", ").png", 10);
+	animal.idle			= createImageSpriteSet(assetPath + "Idle (", ").png", 10);
+	animal.jump			= createImageSpriteSet(assetPath + "Jump (", ").png", 8);
+	animal.run			= createImageSpriteSet(assetPath + "Run (", ").png", 8);
+	animal.slide		= createImageSpriteSet(assetPath + "Slide (", ").png", 10);
+	animal.walk			= createImageSpriteSet(assetPath + "Walk (", ").png", 10);
+	
+	return animal;
+}
+
 function Resources()
 {
 	var tilesAssetPath		= "freetileset/png/Tiles/";
 	var bgAssetPath			= "freetileset/png/BG/";
 	var catAssetPath		= "catndog/png/cat/";
-
+	var dogAssetPath		= "catndog/png/dog/";
+	
+	this.background			= createImage(bgAssetPath + "BG.png");
+	
 	this.ground = {}
 	this.ground.topLeft		= createImage(tilesAssetPath + "1.png");
 	this.ground.topMiddle	= createImage(tilesAssetPath + "2.png");
@@ -43,15 +62,6 @@ function Resources()
 	this.ground.middle		= createImage(tilesAssetPath + "5.png");
 	this.ground.right		= createImage(tilesAssetPath + "6.png");
 	
-	this.cat = {};
-	this.cat.dead			= createImageSpriteSet(catAssetPath + "Dead (", ").png", 10);
-	this.cat.fall			= createImageSpriteSet(catAssetPath + "Fall (", ").png", 8);
-	this.cat.hurt			= createImageSpriteSet(catAssetPath + "Hurt (", ").png", 10);
-	this.cat.idle			= createImageSpriteSet(catAssetPath + "Idle (", ").png", 10);
-	this.cat.jump			= createImageSpriteSet(catAssetPath + "Jump (", ").png", 8);
-	this.cat.run			= createImageSpriteSet(catAssetPath + "Run (", ").png", 8);
-	this.cat.slide			= createImageSpriteSet(catAssetPath + "Slide (", ").png", 10);
-	this.cat.walk			= createImageSpriteSet(catAssetPath + "Walk (", ").png", 10);
-	
-	this.background			= createImage(bgAssetPath + "BG.png");
+	this.cat 				= createAnimalSpriteSets(catAssetPath);
+	this.dog 				= createAnimalSpriteSets(dogAssetPath);
 }
