@@ -14,6 +14,7 @@ function Player()
 	this.radius = 10;
 	this.color = "green";
 	this.isAlive = true;
+	this.score = 0;
 
 	this.state = playerStates.run;
 	
@@ -38,6 +39,8 @@ function Player()
 		{
 			return;
 		}
+		
+		this.score += 1;
 		
 		var gravity = 1.0;
 		

@@ -5,7 +5,8 @@ var world =
 	platformSpawner: null,
 	platformUpdater: null,
 	player: null,
-	hud: null,
+	scoreDisplay: null,
+	gameOverScreen: null,
 	
 	resources: null,
 	renderer: null,
@@ -34,7 +35,8 @@ function restartGame()
 	
 	world.player = new Player();
 	
-	world.hud = new Hud();
+	world.scoreDisplay = new ScoreDisplay();
+	world.gameOverScreen = new GameOverScreen();
 	
 	gameState = gameStates.running;
 }
@@ -81,22 +83,22 @@ function init()
 
 function update()
 {
-	//world.platforms.forEach(function (p) { p.update(world); });
-	
 	if (gameState === gameStates.running)
 	{
 		world.platformUpdater.update(world);
 		world.platformSpawner.update(world);
 		world.player.update(world);
-		world.hud.update(world);
+		world.scoreDisplay.update(world);
 		
 		if (!world.player.isAlive)
 		{
+			world.gameOverScreen.update(world);
 			gameState = gameStates.gameover;
 		}
 	}
 	else if (gameState === gameStates.gameover)
 	{
+		world.gameOverScreen.update(world);
 	}
 }
 
@@ -104,14 +106,20 @@ function draw()
 {
 	var renderer = world.renderer;
 	
-    //renderer.clearScreen();
 	world.background.draw(renderer);
 
 	world.platforms.forEach(function (p) { p.draw(renderer); });
 	
 	world.player.draw(renderer);
 	
-	world.hud.draw(renderer);
+	if (gameState === gameStates.running)
+	{
+		world.scoreDisplay.draw(renderer);
+	}
+	else if (gameState === gameStates.gameover)
+	{
+		world.gameOverScreen.draw(renderer);
+	}
 }
 
 function tick()
