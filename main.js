@@ -1,21 +1,43 @@
 var renderer = null;
 var resources = {};
-var platforms = [];
+
 var background = null;
+var platforms = [];
+var player = null;
+
+function onKeyDown(e)
+{
+	if (e.keyCode == 32)
+	{
+		player.setJumping(true);
+	}
+}
+
+function onKeyUp(e)
+{
+	if (e.keyCode == 32)
+	{
+		player.setJumping(false);
+	}
+}
 
 function init()
 {
 	var canvas = document.getElementById("TheCanvas");
 	
 	renderer = new Renderer(canvas);
-	
 	resources = new Resources();
 	
 	background = new EnvTile(resources.background);
 	background.width = 1000;
 	background.height = 750;
 	
-	platforms.push(createRandomPlatform(resources.ground, renderer));
+	var firstPlatform = new Platform(20, 3, resources.ground);
+	firstPlatform.x = 0;
+	firstPlatform.y = renderer.screenHeight - firstPlatform.height;
+	platforms.push(firstPlatform);
+	
+	player = new Player();
 }
 
 function updateObject(inObject)
@@ -58,6 +80,8 @@ function update()
 	{
 		platforms.push(createRandomPlatform(resources.ground, renderer));
 	}
+	
+	player.update(renderer, platforms);
 }
 
 function draw()
@@ -67,6 +91,8 @@ function draw()
 	drawObject(background);
 
 	forEachObject(platforms, drawObject);
+	
+	drawObject(player);
 }
 
 function tick()

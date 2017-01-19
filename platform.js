@@ -82,10 +82,16 @@ function Platform(widthUnits, heightUnits, groundImages)
 	};
 }
 
+var lastPlatformHeight = 3;
+
 function createRandomPlatform(groundImages, renderer)
 {
+	var maxHeightUnits = lastPlatformHeight + 4;
+	maxHeightUnits = clamp(maxHeightUnits, 1, 8);
+	
 	var widthUnits = getRandomInt(2, 20);
-	var heightUnits = getRandomInt(1, 8);
+	var heightUnits = getRandomInt(1, maxHeightUnits);
+	lastPlatformHeight = heightUnits;
 	
 	var platform = new Platform(widthUnits, heightUnits, groundImages);
 	platform.x = renderer.screenWidth;
