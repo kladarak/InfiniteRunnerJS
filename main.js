@@ -35,9 +35,6 @@ function restartGame()
 	
 	world.player = new Player();
 	
-	world.scoreDisplay = new ScoreDisplay();
-	world.gameOverScreen = new GameOverScreen();
-	
 	gameState = gameStates.running;
 }
 
@@ -77,6 +74,9 @@ function init()
 	world.background = new EnvTile(world.resources.background);
 	world.background.width = 1000;
 	world.background.height = 750;
+	
+	world.scoreDisplay = new ScoreDisplay();
+	world.gameOverScreen = new GameOverScreen();
 	
 	restartGame();
 }
