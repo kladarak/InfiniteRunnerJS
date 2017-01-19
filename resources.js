@@ -16,6 +16,19 @@ function createImage(filepath)
 	return newImg;
 }
 
+function createImageSpriteSet(prefixFilepath, suffixFilepath, count)
+{
+	var imageSpriteSet = [];
+	
+	for (var i = 1; i <= count; ++i)
+	{
+		var filepath = prefixFilepath + i + suffixFilepath;
+		imageSpriteSet.push( createImage(filepath) );
+	}
+	
+	return imageSpriteSet;
+}
+
 function Resources()
 {
 	var tilesAssetPath		= "freetileset/png/Tiles/";
@@ -31,15 +44,14 @@ function Resources()
 	this.ground.right		= createImage(tilesAssetPath + "6.png");
 	
 	this.cat = {};
-	this.cat.running = [];
-	this.cat.running.push( createImage(catAssetPath + "Run (1).png") );
-	this.cat.running.push( createImage(catAssetPath + "Run (2).png") );
-	this.cat.running.push( createImage(catAssetPath + "Run (3).png") );
-	this.cat.running.push( createImage(catAssetPath + "Run (4).png") );
-	this.cat.running.push( createImage(catAssetPath + "Run (5).png") );
-	this.cat.running.push( createImage(catAssetPath + "Run (6).png") );
-	this.cat.running.push( createImage(catAssetPath + "Run (7).png") );
-	this.cat.running.push( createImage(catAssetPath + "Run (8).png") );
+	this.cat.dead			= createImageSpriteSet(catAssetPath + "Dead (", ").png", 10);
+	this.cat.fall			= createImageSpriteSet(catAssetPath + "Fall (", ").png", 8);
+	this.cat.hurt			= createImageSpriteSet(catAssetPath + "Hurt (", ").png", 10);
+	this.cat.idle			= createImageSpriteSet(catAssetPath + "Idle (", ").png", 10);
+	this.cat.jump			= createImageSpriteSet(catAssetPath + "Jump (", ").png", 8);
+	this.cat.run			= createImageSpriteSet(catAssetPath + "Run (", ").png", 8);
+	this.cat.slide			= createImageSpriteSet(catAssetPath + "Slide (", ").png", 10);
+	this.cat.walk			= createImageSpriteSet(catAssetPath + "Walk (", ").png", 10);
 	
 	this.background			= createImage(bgAssetPath + "BG.png");
 }

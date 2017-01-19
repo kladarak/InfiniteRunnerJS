@@ -13,7 +13,7 @@ var playerConstants =
 	jumpThrust: -10,
 };
 
-function Player(world)
+function Player(characterModel)
 {
 	this.x = 100;
 	this.y = 200;
@@ -23,20 +23,29 @@ function Player(world)
 	this.score = 0;
 
 	this.state = playerStates.run;
-	this.sprite = new AnimatedSprite(world.resources.cat.running);
+	this.model = characterModel;
 	
 	this.yVel = 0;
+	
+	this.setState = function(state)
+	{
+		this.state = state;
+		
+		if (this.state == playerStates.run)		{ this.model.setState( characterModelStates.run ); }
+		if (this.state == playerStates.jump) 	{ this.model.setState( characterModelStates.jump ); }
+		if (this.state == playerStates.fall) 	{ this.model.setState( characterModelStates.fall ); }
+	}
 	
 	this.setJumping = function(isJumping)
 	{
 		if (isJumping && this.state === playerStates.run)
 		{
 			this.yVel = playerConstants.jumpThrust;
-			this.state = playerStates.jump;
+			this.setState( playerStates.jump );
 		}
 		else if (!isJumping)
 		{
-			this.state = playerStates.fall;
+			this.setState( playerStates.fall );
 		}
 	};
 	
@@ -79,7 +88,7 @@ function Player(world)
 		
 		if (runningOnPlatform)
 		{
-			this.state = playerStates.run;
+			this.setState( playerStates.run );
 			this.y = runningOnPlatform.y - this.height;
 			this.yVel = 0;
 		}
@@ -87,7 +96,7 @@ function Player(world)
 		{
 			if (this.state !== playerStates.jump || this.yVel >= -2)
 			{
-				this.state = playerStates.fall;
+				this.setState( playerStates.fall );
 			}
 			
 			this.y = nextBotY - this.height;
@@ -95,15 +104,15 @@ function Player(world)
 		
 		this.isAlive = this.y < world.renderer.screenHeight;
 		
-		this.sprite.update(world);
+		this.model.update(world);
 	}
 	
 	this.draw = function(renderer)
 	{
-		this.sprite.x 		= this.x;
-		this.sprite.y 		= this.y;
-		this.sprite.width	= this.width;
-		this.sprite.height	= this.height;
-		this.sprite.draw(renderer);
+		this.model.x 		= this.x;
+		this.model.y 		= this.y;
+		this.model.width	= this.width;
+		this.model.height	= this.height;
+		this.model.draw(renderer);
 	}
 }

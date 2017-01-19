@@ -1,13 +1,20 @@
-function AnimatedSprite(spriteImageFrames)
+function AnimatedSprite(spriteImageFrames, loop)
 {
 	this.x = 0;
 	this.y = 0;
 	this.width = 50;
 	this.height = 50;
+	this.loop = loop;
 	
 	this.imageFrames = spriteImageFrames;
 	this.frameIndex = 0;
 	this.frameTime = 0;
+	
+	this.reset = function()
+	{
+		this.frameTime = 0;
+		this.frameIndex = 0;
+	};
 	
 	this.update = function(world)
 	{
@@ -21,7 +28,14 @@ function AnimatedSprite(spriteImageFrames)
 			
 			if (this.frameIndex >= this.imageFrames.length)
 			{
-				this.frameIndex = 0;
+				if (this.loop)
+				{
+					this.frameIndex = 0;
+				}
+				else
+				{
+					this.frameIndex--;
+				}
 			}
 		}
 	};
