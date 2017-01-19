@@ -7,23 +7,61 @@ var world =
 	player: null,
 	hud: null,
 	
-	renderer: null,
 	resources: null,
+	renderer: null,
 };
+
+var gameStates =
+{
+	loading: "loading",
+	running: "running",
+	gameover: "gameover",
+};
+
+var gameState = gameStates.loading;
+
+function restartGame()
+{
+	world.platforms = [];
+	
+	var firstPlatform = new Platform(20, 3, world.resources.ground);
+	firstPlatform.x = 0;
+	firstPlatform.y = world.renderer.screenHeight - firstPlatform.height;
+	world.platforms.push(firstPlatform);
+	
+	world.platformSpawner = new PlatformSpawner();
+	world.platformUpdater = new PlatformUpdater();
+	
+	world.player = new Player();
+	
+	world.hud = new Hud();
+	
+	gameState = gameStates.running;
+}
 
 function onKeyDown(e)
 {
-	if (e.keyCode == 32)
+	if (gameState === gameStates.running)
 	{
-		world.player.setJumping(true);
+		if (e.keyCode == 32)
+		{
+			world.player.setJumping(true);
+		}
+	}
+	else if (gameState === gameStates.gameover)
+	{
+		restartGame();
 	}
 }
 
 function onKeyUp(e)
 {
-	if (e.keyCode == 32)
+	if (gameState === gameStates.running)
 	{
-		world.player.setJumping(false);
+		if (e.keyCode == 32)
+		{
+			world.player.setJumping(false);
+		}
 	}
 }
 
@@ -38,27 +76,28 @@ function init()
 	world.background.width = 1000;
 	world.background.height = 750;
 	
-	var firstPlatform = new Platform(20, 3, world.resources.ground);
-	firstPlatform.x = 0;
-	firstPlatform.y = world.renderer.screenHeight - firstPlatform.height;
-	world.platforms.push(firstPlatform);
-	
-	world.platformSpawner = new PlatformSpawner();
-	world.platformUpdater = new PlatformUpdater();
-	
-	world.player = new Player();
-	
-	world.hud = new Hud();
+	restartGame();
 }
 
 function update()
 {
 	//world.platforms.forEach(function (p) { p.update(world); });
 	
-	world.platformUpdater.update(world);
-	world.platformSpawner.update(world);
-	world.player.update(world);
-	world.hud.update(world);
+	if (gameState === gameStates.running)
+	{
+		world.platformUpdater.update(world);
+		world.platformSpawner.update(world);
+		world.player.update(world);
+		world.hud.update(world);
+		
+		if (!world.player.isAlive)
+		{
+			gameState = gameStates.gameover;
+		}
+	}
+	else if (gameState === gameStates.gameover)
+	{
+	}
 }
 
 function draw()

@@ -13,6 +13,7 @@ function Player()
 	this.height = 20;
 	this.radius = 10;
 	this.color = "green";
+	this.isAlive = true;
 
 	this.state = playerStates.run;
 	
@@ -33,6 +34,11 @@ function Player()
 	
 	this.update = function(world)
 	{
+		if (!this.isAlive)
+		{
+			return;
+		}
+		
 		var gravity = 1.0;
 		
 		if (this.state === playerStates.jump)
@@ -80,13 +86,7 @@ function Player()
 			this.y = nextY - this.radius;
 		}
 		
-		if (this.y > world.renderer.screenHeight)
-		{
-			// reset player
-			this.state = playerStates.fall;
-			this.y = 0;
-			this.yVel = 0;
-		}
+		this.isAlive = (this.y - this.radius) < world.renderer.screenHeight;
 	}
 	
 	this.draw = function(renderer)
