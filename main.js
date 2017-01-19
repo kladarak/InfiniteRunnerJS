@@ -2,6 +2,8 @@ var world =
 {
 	background: null,
 	platforms: [],
+	platformSpawner: null,
+	platformUpdater: null,
 	player: null,
 	hud: null,
 	
@@ -41,66 +43,36 @@ function init()
 	firstPlatform.y = world.renderer.screenHeight - firstPlatform.height;
 	world.platforms.push(firstPlatform);
 	
+	world.platformSpawner = new PlatformSpawner();
+	world.platformUpdater = new PlatformUpdater();
+	
 	world.player = new Player();
 	
 	world.hud = new Hud();
 }
 
-function updateObject(inObject)
-{
-	inObject.update(world.renderer);
-}
-
-function drawObject(inObject)
-{
-	inObject.draw(world.renderer);
-}
-
-function forEachObject(inObjects, inFunc)
-{
-	inObjects.forEach(inFunc);
-}
-
 function update()
 {
-	forEachObject(world.platforms, updateObject);
+	//world.platforms.forEach(function (p) { p.update(world); });
 	
-	// TODO: Will the discarded platforms get GC'd?
-	world.platforms = world.platforms.filter(function(platform)
-	{
-		return platform.isOnScreen;
-	});
-	
-	var shouldCreateAnotherPlatform = true;
-	
-	if (world.platforms.length > 0)
-	{
-		var lastPlatform = world.platforms[world.platforms.length - 1];
-		var platformRight = lastPlatform.x + lastPlatform.width;
-		var distanceFromScreenRight = world.renderer.screenWidth - platformRight;
-		
-		shouldCreateAnotherPlatform = (distanceFromScreenRight >= defaultTileWidth);
-	}
-	
-	if (shouldCreateAnotherPlatform)
-	{
-		world.platforms.push(createRandomPlatform(world.resources.ground, world.renderer));
-	}
-	
+	world.platformUpdater.update(world);
+	world.platformSpawner.update(world);
 	world.player.update(world);
 	world.hud.update(world);
 }
 
 function draw()
 {
+	var renderer = world.renderer;
+	
     //renderer.clearScreen();
-	drawObject(world.background);
+	world.background.draw(renderer);
 
-	forEachObject(world.platforms, drawObject);
+	world.platforms.forEach(function (p) { p.draw(renderer); });
 	
-	drawObject(world.player);
+	world.player.draw(renderer);
 	
-	drawObject(world.hud);
+	world.hud.draw(renderer);
 }
 
 function tick()

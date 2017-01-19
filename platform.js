@@ -59,11 +59,8 @@ function Platform(widthUnits, heightUnits, groundImages)
 		}
 	}
 	
-	this.update = function(renderer)
+	this.update = function(world)
 	{
-		this.x -= 2;
-		
-		this.isOnScreen = (this.x + this.width) > 0;
 	};
 	
 	this.draw = function(renderer)
