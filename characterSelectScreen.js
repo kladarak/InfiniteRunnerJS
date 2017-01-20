@@ -17,22 +17,38 @@ function CharacterSelectScreen(world)
 	{
 		var characterSize = 200;
 		
-		var x = (renderer.screenWidth - characterSize) / 2;
-		x -= characterSize;
+		var catX = (renderer.screenWidth - characterSize) / 2;
+		catX -= characterSize;
 		var y = (renderer.screenHeight - characterSize) / 2;
 	
-		world.catModel.x = x;
-		world.catModel.y = y;
-		world.catModel.width = characterSize;
-		world.catModel.height = characterSize;
-		world.catModel.draw(renderer);
+		this.catModel.x = catX;
+		this.catModel.y = y;
+		this.catModel.width = characterSize;
+		this.catModel.height = characterSize;
+		this.catModel.draw(renderer);
 		
-		x += characterSize * 2;
+		var dogX = catX + characterSize * 2;
 		
-		world.dogModel.x = x;
-		world.dogModel.y = y;
-		world.dogModel.width = characterSize;
-		world.dogModel.height = characterSize;
-		world.dogModel.draw(renderer);
+		this.dogModel.x = dogX;
+		this.dogModel.y = y;
+		this.dogModel.width = characterSize;
+		this.dogModel.height = characterSize;
+		this.dogModel.draw(renderer);
+		
+		var selectionX = this.selectedModel === this.catModel ? catX : dogX;
+		
+		var ctx = renderer.context;
+		ctx.strokeStyle = "green";
+		ctx.strokeRect(selectionX, y, characterSize, characterSize);
+		
+		// Overlay with text
+		var x = renderer.screenWidth / 2;
+		var y = renderer.screenHeight / 4;
+		var txt = "Choose a character";
+		
+		ctx.font = "36px serif";
+		ctx.fillStyle = "green";
+		ctx.textAlign  = "center";
+		ctx.fillText(txt, x, y);
 	};
 }

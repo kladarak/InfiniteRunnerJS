@@ -47,25 +47,33 @@ function onKeyDown(e)
 {
 	if (gameState === gameStates.characterSelect)
 	{
-		if (e.keyCode == 67)
+		switch(e.key)
 		{
-			world.selectedModel = world.catModel;
-		}
-		else if (e.keyCode == 68)
-		{
-			world.selectedModel = world.dogModel;
-		}
-		else if (e.keyCode == 32)
-		{
-			restartGame();
-			gameState = gameStates.running;
+			case "ArrowLeft":
+			case "a":
+			case "A":
+				world.selectedModel = world.catModel;
+				break;
+				
+			case "ArrowRight":
+			case "d":
+			case "D":
+				world.selectedModel = world.dogModel;
+				break;
+				
+			case " ":
+				restartGame();
+				gameState = gameStates.running;
+				break;
 		}
 	}
 	else if (gameState === gameStates.running)
 	{
-		if (e.keyCode == 32)
+		switch(e.key)
 		{
-			world.player.setJumping(true);
+			case " ":
+				world.player.setJumping(true);
+				break;
 		}
 	}
 	else if (gameState === gameStates.gameover)
