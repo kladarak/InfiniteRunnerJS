@@ -26,6 +26,7 @@ function Player(characterModel)
 	this.model = characterModel;
 	
 	this.yVel = 0;
+	this.jumpCount = 0;
 	
 	this.setState = function(state)
 	{
@@ -38,10 +39,11 @@ function Player(characterModel)
 	
 	this.setJumping = function(isJumping)
 	{
-		if (isJumping && this.state === playerStates.run)
+		if (isJumping && ((this.state === playerStates.run) || (this.jumpCount < 2)))
 		{
 			this.yVel = playerConstants.jumpThrust;
 			this.setState( playerStates.jump );
+			this.jumpCount++;
 		}
 		else if (!isJumping)
 		{
@@ -91,6 +93,7 @@ function Player(characterModel)
 			this.setState( playerStates.run );
 			this.y = runningOnPlatform.y - this.height;
 			this.yVel = 0;
+			this.jumpCount = 0;
 		}
 		else
 		{
