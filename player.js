@@ -20,7 +20,6 @@ function Player(characterModel)
 	this.width = 100;
 	this.height = 100;
 	this.isAlive = true;
-	this.score = 0;
 
 	this.state = playerStates.run;
 	this.model = characterModel;
@@ -72,8 +71,6 @@ function Player(characterModel)
 		{
 			return;
 		}
-		
-		this.score += 1;
 		
 		var gravity = this.isJumping() ? playerConstants.jumpGravity : playerConstants.normalGravity;
 		

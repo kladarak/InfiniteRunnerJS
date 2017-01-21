@@ -4,7 +4,7 @@ function ScoreDisplay()
 	
 	this.update = function (world)
 	{
-		this.score = world.player.score;
+		this.score = world.score;
 	};
 	
 	this.draw = function (renderer)
@@ -24,7 +24,7 @@ function GameOverScreen()
 	
 	this.update = function (world)
 	{
-		this.score = world.player.score;
+		this.score = world.score;
 	};
 	
 	this.draw = function (renderer)

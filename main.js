@@ -2,8 +2,6 @@ var world =
 {
 	background: null,
 	platforms: [],
-	platformSpawner: null,
-	platformUpdater: null,
 	player: null,
 
 	catModel: null,
@@ -12,6 +10,7 @@ var world =
 	
 	resources: null,
 	renderer: null,
+	score: 0,
 };
 
 var gameStateMachine = null;

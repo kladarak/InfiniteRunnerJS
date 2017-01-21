@@ -30,7 +30,7 @@ function createGameStateMachine(world)
 	
 	addTransition(playingGameState, gameOverState, function()
 	{
-		return !world.player.isAlive;
+		return !playingGameState.player.isAlive;
 	});
 	
 	addTransition(gameOverState, selectCharacterState, function()

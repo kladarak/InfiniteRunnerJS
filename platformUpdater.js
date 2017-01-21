@@ -2,7 +2,7 @@ function PlatformUpdater()
 {
 	this.update = function(world)
 	{
-		var speed = world.player.score / 2000;
+		var speed = world.score / 2000;
 		speed += 3;
 		
 		world.platforms.forEach(function (p)

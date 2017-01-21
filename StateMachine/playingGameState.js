@@ -1,6 +1,9 @@
 function PlayingGameState(world)
 {
-	this.scoreDisplay = new ScoreDisplay();
+	this.scoreDisplay = new ScoreDisplay();	
+	this.platformSpawner = new PlatformSpawner();
+	this.platformUpdater = new PlatformUpdater();
+	this.player = null;
 	
 	this.onEnter = function(world)
 	{
@@ -11,10 +14,7 @@ function PlayingGameState(world)
 		firstPlatform.y = world.renderer.screenHeight - firstPlatform.height;
 		world.platforms.push(firstPlatform);
 		
-		world.platformSpawner = new PlatformSpawner();
-		world.platformUpdater = new PlatformUpdater();
-		
-		world.player = new Player(world.selectedModel);
+		this.player = new Player(world.selectedModel);
 	}
 	
 	this.onKeyDown = function(e)
@@ -22,7 +22,7 @@ function PlayingGameState(world)
 		switch(e.key)
 		{
 			case " ":
-				world.player.setJumping(true);
+				this.player.setJumping(true);
 				break;
 		}
 	}
@@ -32,16 +32,18 @@ function PlayingGameState(world)
 		switch(e.key)
 		{
 			case " ":
-				world.player.setJumping(false);
+				this.player.setJumping(false);
 				break;
 		}
 	}
 	
 	this.update = function(world)
 	{
-		world.platformUpdater.update(world);
-		world.platformSpawner.update(world);
-		world.player.update(world);
+		world.score++;
+		
+		this.platformUpdater.update(world);
+		this.platformSpawner.update(world);
+		this.player.update(world);
 		this.scoreDisplay.update(world);
 	}
 	
@@ -50,7 +52,7 @@ function PlayingGameState(world)
 		world.background.draw(renderer);
 		world.platforms.forEach(function (p) { p.draw(renderer); });
 		
-		world.player.draw(renderer);
+		this.player.draw(renderer);
 		this.scoreDisplay.draw(renderer);
 	}
 }
