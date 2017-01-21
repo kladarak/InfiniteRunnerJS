@@ -32,9 +32,19 @@ function Player(characterModel)
 	{
 		this.state = state;
 		
-		if (this.state == playerStates.run)		{ this.model.setState( characterModelStates.run ); }
-		if (this.state == playerStates.jump) 	{ this.model.setState( characterModelStates.jump ); }
-		if (this.state == playerStates.fall) 	{ this.model.setState( characterModelStates.fall ); }
+		var getNewCharacterModelState = function()
+		{
+			switch (state)
+			{
+				case playerStates.run:	return characterModelStates.run;
+				case playerStates.jump: return characterModelStates.jump;
+				case playerStates.fall: return characterModelStates.fall;
+			}
+			
+			return characterModelStates.run;
+		};
+		
+		this.model.setState( getNewCharacterModelState() );
 	}
 	
 	this.setJumping = function(isJumping)
