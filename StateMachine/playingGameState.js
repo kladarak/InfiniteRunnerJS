@@ -8,6 +8,7 @@ function PlayingGameState(world)
 	this.onEnter = function(world)
 	{
 		world.platforms = [];
+		world.score = 0;
 		
 		var firstPlatform = new Platform(20, 3, world.resources.ground);
 		firstPlatform.x = 0;
