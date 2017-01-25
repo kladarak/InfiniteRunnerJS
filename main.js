@@ -23,7 +23,7 @@ function init()
 	world.renderer = new Renderer(canvas);
 	world.resources = new Resources();
 	
-	world.background = new EnvTile(world.resources.background);
+	world.background = new Sprite(world.resources.background);
 	world.background.width = 1000;
 	world.background.height = 750;
 	

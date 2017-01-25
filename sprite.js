@@ -1,4 +1,4 @@
-function EnvTile(inImage)
+function Sprite(inImage)
 {
 	this.x = 0;
 	this.y = 0;

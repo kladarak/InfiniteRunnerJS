@@ -50,7 +50,7 @@ function Platform(widthUnits, heightUnits, groundImages)
 				}
 			}
 			
-			var tile = new EnvTile(img);
+			var tile = new Sprite(img);
 			tile.x = x * defaultTileWidth;
 			tile.y = y * defaultTileHeight;
 			tile.width = defaultTileWidth;
