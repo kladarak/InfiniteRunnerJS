@@ -18,12 +18,18 @@ function PlayingGameState(world)
 		this.player = new Player(world.selectedModel);
 	}
 	
+	this.jumpKeyDown = false;
+	
 	this.onKeyDown = function(e)
 	{
 		switch(e.key)
 		{
 			case " ":
-				this.player.setJumping(true);
+				if (!this.jumpKeyDown)
+				{
+					this.player.setJumping(true);
+					this.jumpKeyDown = true;
+				}
 				break;
 		}
 	}
@@ -34,6 +40,7 @@ function PlayingGameState(world)
 		{
 			case " ":
 				this.player.setJumping(false);
+				this.jumpKeyDown = false;
 				break;
 		}
 	}
