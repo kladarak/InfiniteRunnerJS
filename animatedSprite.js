@@ -1,12 +1,15 @@
 function AnimatedSprite(spriteImageFrames, loop)
 {
-	this.x = 0;
-	this.y = 0;
-	this.width = 50;
-	this.height = 50;
+	this.rect = new Rect(0, 0, 50, 50);
 	this.loop = loop;
 	
-	this.imageFrames = spriteImageFrames;
+	this.spriteFrames = [];
+
+	for (img of spriteImageFrames)
+	{
+		this.spriteFrames.push(new Sprite(img));
+	}
+	
 	this.frameIndex = 0;
 	this.frameTime = 0;
 	
@@ -26,7 +29,7 @@ function AnimatedSprite(spriteImageFrames, loop)
 			
 			this.frameIndex++;
 			
-			if (this.frameIndex >= this.imageFrames.length)
+			if (this.frameIndex >= this.spriteFrames.length)
 			{
 				if (this.loop)
 				{
@@ -42,10 +45,11 @@ function AnimatedSprite(spriteImageFrames, loop)
 	
 	this.draw = function(renderer)
 	{
-		if (this.imageFrames.length)
+		if (this.spriteFrames.length)
 		{
-			var img = this.imageFrames[this.frameIndex];
-			renderer.context.drawImage(img, this.x, this.y, this.width, this.height);
+			var sprite = this.spriteFrames[this.frameIndex];
+			sprite.rect = this.rect;
+			sprite.draw(renderer);
 		}
 	};
 }

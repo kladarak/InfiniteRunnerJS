@@ -11,8 +11,8 @@ function PlayingGameState(world)
 		world.score = 0;
 		
 		var firstPlatform = new Platform(20, 3, world.resources.ground);
-		firstPlatform.x = 0;
-		firstPlatform.y = world.renderer.screenHeight - firstPlatform.height;
+		firstPlatform.rect.x = 0;
+		firstPlatform.rect.y = world.renderer.screenHeight - firstPlatform.rect.height;
 		world.platforms.push(firstPlatform);
 		
 		this.player = new Player(world.selectedModel);

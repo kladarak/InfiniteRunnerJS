@@ -7,8 +7,8 @@ function PlatformUpdater()
 		
 		world.platforms.forEach(function (p)
 		{
-			p.x -= speed;
-			p.isOnScreen = (p.x + p.width) > 0;
+			p.rect.x -= speed;
+			p.isOnScreen = p.rect.right() > 0;
 		});
 		
 		world.platforms = world.platforms.filter(function(platform)

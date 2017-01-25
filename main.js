@@ -24,8 +24,8 @@ function init()
 	world.resources = new Resources();
 	
 	world.background = new Sprite(world.resources.background);
-	world.background.width = 1000;
-	world.background.height = 750;
+	world.background.rect.width = 1000;
+	world.background.rect.height = 750;
 	
 	world.catModel = new CharacterModel(world.resources.cat);
 	world.dogModel = new CharacterModel(world.resources.dog);

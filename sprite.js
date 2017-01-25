@@ -1,13 +1,9 @@
 function Sprite(inImage)
 {
-	this.x = 0;
-	this.y = 0;
-	this.width = 10;
-	this.height = 10;
-	
+	this.rect = new Rect(0, 0, 10, 10);
 	this.img = inImage;
 	
-	this.update = function(renderer)
+	this.update = function(world)
 	{
 		
 	}
@@ -16,7 +12,7 @@ function Sprite(inImage)
 	{
 		if (this.img)
 		{
-			renderer.context.drawImage(this.img, this.x, this.y, this.width, this.height);
+			renderer.context.drawImage(this.img, this.rect.x, this.rect.y, this.rect.width, this.rect.height);
 		}
 	};
 }

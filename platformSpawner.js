@@ -7,8 +7,7 @@ function PlatformSpawner()
 		if (world.platforms.length > 0)
 		{
 			var lastPlatform = world.platforms[world.platforms.length - 1];
-			var platformRight = lastPlatform.x + lastPlatform.width;
-			var distanceFromScreenRight = world.renderer.screenWidth - platformRight;
+			var distanceFromScreenRight = world.renderer.screenWidth - lastPlatform.rect.right();
 			
 			shouldCreateAnotherPlatform = (distanceFromScreenRight >= defaultTileWidth);
 		}

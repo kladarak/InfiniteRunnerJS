@@ -21,18 +21,18 @@ function CharacterSelectScreen(world)
 		catX -= characterSize;
 		var y = (renderer.screenHeight - characterSize) / 2;
 	
-		this.catModel.x = catX;
-		this.catModel.y = y;
-		this.catModel.width = characterSize;
-		this.catModel.height = characterSize;
+		this.catModel.rect.x = catX;
+		this.catModel.rect.y = y;
+		this.catModel.rect.width = characterSize;
+		this.catModel.rect.height = characterSize;
 		this.catModel.draw(renderer);
 		
 		var dogX = catX + characterSize * 2;
 		
-		this.dogModel.x = dogX;
-		this.dogModel.y = y;
-		this.dogModel.width = characterSize;
-		this.dogModel.height = characterSize;
+		this.dogModel.rect.x = dogX;
+		this.dogModel.rect.y = y;
+		this.dogModel.rect.width = characterSize;
+		this.dogModel.rect.height = characterSize;
 		this.dogModel.draw(renderer);
 		
 		var selectionX = this.selectedModel === this.catModel ? catX : dogX;

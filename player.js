@@ -15,10 +15,7 @@ var playerConstants =
 
 function Player(characterModel)
 {
-	this.x = 100;
-	this.y = 200;
-	this.width = 100;
-	this.height = 100;
+	this.rect = new Rect(100, 200, 100, 100);
 	this.isAlive = true;
 
 	this.state = playerStates.run;
@@ -77,18 +74,18 @@ function Player(characterModel)
 		this.yVel += gravity;
 		this.yVel = Math.min(this.yVel, playerConstants.maxYVelocity);
 		
-		var prevBotY = this.y + this.height;
+		var prevBotY = this.rect.bottom();
 		var nextBotY = prevBotY + this.yVel;
-		var centreX = this.x + (this.width / 2);
+		var centreX = this.rect.centreX();
 		
 		var runningOnPlatform = null;
 		
-		for (let platform of world.platforms)
+		for (platform of world.platforms)
 		{
-			if (centreX >= platform.x && centreX <= platform.x + platform.width)
+			if (centreX >= platform.rect.left() && centreX <= platform.rect.right())
 			{
 				// check if bottom of player falls through platform
-				if (prevBotY <= platform.y && nextBotY >= platform.y)
+				if (prevBotY <= platform.rect.top() && nextBotY >= platform.rect.top())
 				{
 					runningOnPlatform = platform;
 				}
@@ -98,7 +95,7 @@ function Player(characterModel)
 		if (runningOnPlatform)
 		{
 			this.setState( playerStates.run );
-			this.y = runningOnPlatform.y - this.height;
+			this.rect.y = runningOnPlatform.rect.y - this.rect.height;
 			this.yVel = 0;
 			this.jumpCount = 0;
 		}
@@ -109,20 +106,17 @@ function Player(characterModel)
 				this.setState( playerStates.fall );
 			}
 			
-			this.y = nextBotY - this.height;
+			this.rect.y = nextBotY - this.rect.height;
 		}
 		
-		this.isAlive = this.y < world.renderer.screenHeight;
+		this.isAlive = this.rect.y < world.renderer.screenHeight;
 		
 		this.model.update(world);
 	}
 	
 	this.draw = function(renderer)
 	{
-		this.model.x 		= this.x;
-		this.model.y 		= this.y;
-		this.model.width	= this.width;
-		this.model.height	= this.height;
+		this.model.rect = this.rect;
 		this.model.draw(renderer);
 	}
 }
