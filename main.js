@@ -2,6 +2,7 @@ var world =
 {
 	background: null,
 	platforms: [],
+	fruits: [],
 	player: null,
 
 	catModel: null,

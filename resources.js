@@ -51,6 +51,7 @@ function Resources()
 	var bgAssetPath			= "freetileset/png/BG/";
 	var catAssetPath		= "catndog/png/cat/";
 	var dogAssetPath		= "catndog/png/dog/";
+	var fruitAssetPath		= "cake_128/";
 	
 	this.background			= createImage(bgAssetPath + "BG.png");
 	
@@ -64,4 +65,23 @@ function Resources()
 	
 	this.cat 				= createAnimalSpriteSets(catAssetPath);
 	this.dog 				= createAnimalSpriteSets(dogAssetPath);
+	
+	this.fruit = {};
+	this.fruit.pear			= createImage(fruitAssetPath + "46.png");
+	this.fruit.apple		= createImage(fruitAssetPath + "47.png");
+	this.fruit.orange		= createImage(fruitAssetPath + "48.png");
+	this.fruit.tomato		= createImage(fruitAssetPath + "49.png");
+	this.fruit.carrot		= createImage(fruitAssetPath + "50.png");
+	this.fruit.banana		= createImage(fruitAssetPath + "53.png");
+	this.fruit.grapes		= createImage(fruitAssetPath + "54.png");
+	this.fruit.cherries		= createImage(fruitAssetPath + "55.png");
+	this.fruit.lemon		= createImage(fruitAssetPath + "56.png");
+	
+	var allFruits = [];
+	for (key in this.fruit)
+	{
+		allFruits.push(this.fruit[key]);
+	}
+	
+	this.fruit.allFruits = allFruits;
 }

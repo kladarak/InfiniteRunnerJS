@@ -1,14 +1,19 @@
 function PlayingGameState(world)
 {
-	this.scoreDisplay = new ScoreDisplay();	
-	this.platformSpawner = new PlatformSpawner();
-	this.platformUpdater = new PlatformUpdater();
+	this.scoreDisplay		= new ScoreDisplay();	
+	this.platformSpawner	= new PlatformSpawner();
+	this.platformUpdater	= new PlatformUpdater();
+	this.fruitSpawner		= new FruitSpawner();
+
 	this.player = null;
 	
 	this.onEnter = function(world)
 	{
 		world.platforms = [];
+		world.fruits = [];
+		world.progress = 0;
 		world.score = 0;
+		world.scrollSpeed = 0;
 		
 		var firstPlatform = new Platform(20, 3, world.resources.ground);
 		firstPlatform.rect.x = 0;
@@ -47,10 +52,13 @@ function PlayingGameState(world)
 	
 	this.update = function(world)
 	{
+		world.progress++;
 		world.score++;
+		world.scrollSpeed = (world.progress / 2000) + 3;
 		
 		this.platformUpdater.update(world);
 		this.platformSpawner.update(world);
+		this.fruitSpawner.update(world);
 		this.player.update(world);
 		this.scoreDisplay.update(world);
 	}
@@ -59,6 +67,7 @@ function PlayingGameState(world)
 	{
 		world.background.draw(renderer);
 		world.platforms.forEach(function (p) { p.draw(renderer); });
+		world.fruits.forEach(function (f) { f.draw(renderer); });
 		
 		this.player.draw(renderer);
 		this.scoreDisplay.draw(renderer);
