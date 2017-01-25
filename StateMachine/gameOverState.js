@@ -6,6 +6,11 @@ function GameOverState(world)
 	this.onEnter = function(world)
 	{
 		this.shouldRestartGame = false;
+		
+		world.highscore = Math.max(world.score, world.highscore);
+		
+		this.gameOverScreen.score = world.score;
+		this.gameOverScreen.highscore = world.highscore;
 	}
 	
 	this.onExit = function(world)
@@ -20,7 +25,6 @@ function GameOverState(world)
 	
 	this.update = function(world)
 	{
-		this.gameOverScreen.update(world);	
 	}
 	
 	this.draw = function(renderer)

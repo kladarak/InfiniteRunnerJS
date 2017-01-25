@@ -11,6 +11,7 @@ var world =
 	resources: null,
 	renderer: null,
 	score: 0,
+	highscore: 0,
 };
 
 var gameStateMachine = null;
