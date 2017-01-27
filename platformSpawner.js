@@ -15,7 +15,9 @@ function PlatformSpawner()
 		
 		if (shouldCreateAnotherPlatform)
 		{
-			world.platforms.push(createRandomPlatform(world.resources.ground, world.camera, world.renderer));
+			var newPlatform = createRandomPlatform(world.resources.ground, world.camera, world.renderer);
+			world.objects.push(newPlatform);
+			world.platforms.push(newPlatform);
 		}
 	};
 }

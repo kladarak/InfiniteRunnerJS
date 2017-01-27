@@ -29,8 +29,7 @@ function GameOverState(world)
 	
 	this.draw = function(renderer)
 	{
-		world.background.draw(renderer);
-		world.platforms.forEach(function (p) { p.draw(renderer); });
+		world.draw();
 		
 		this.gameOverScreen.draw(renderer);
 	}

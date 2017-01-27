@@ -2,7 +2,7 @@ var world =
 {
 	background: null,
 	platforms: [],
-	fruits: [],
+	objects: [],
 	player: null,
 
 	catModel: null,
@@ -14,6 +14,22 @@ var world =
 	camera: null,
 	score: 0,
 	highscore: 0,
+	
+	draw: function()
+	{
+		this.background.draw(this.renderer);
+		
+		var ctx = this.renderer.context;
+		ctx.save();
+		
+		ctx.translate(-this.camera.pos.x, -this.camera.pos.y);
+		
+		for (o of this.objects) { o.draw(this.renderer); }
+		
+		this.player.draw(this.renderer);
+		
+		ctx.restore();
+	}
 };
 
 var gameStateMachine = null;

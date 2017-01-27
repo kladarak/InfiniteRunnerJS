@@ -3,13 +3,12 @@ function PlayingGameState(world)
 	this.scoreDisplay		= new ScoreDisplay();	
 	this.platformSpawner	= new PlatformSpawner();
 	this.fruitSpawner		= new FruitSpawner();
-
-	this.player = null;
+	this.player				= null;
 	
 	this.onEnter = function(world)
 	{
 		world.platforms = [];
-		world.fruits = [];
+		world.objects = [];
 		world.progress = 0;
 		world.score = 0;
 		world.scrollSpeed = 0;
@@ -18,9 +17,11 @@ function PlayingGameState(world)
 		var firstPlatform = new Platform(20, 3, world.resources.ground);
 		firstPlatform.rect.pos.x = 0;
 		firstPlatform.rect.pos.y = world.renderer.screenHeight - firstPlatform.rect.height;
+		world.objects.push(firstPlatform);
 		world.platforms.push(firstPlatform);
 		
-		this.player = new Player(world.selectedModel);
+		world.player = new Player(world.selectedModel);
+		this.player = world.player;
 	}
 	
 	this.jumpKeyDown = false;
@@ -65,36 +66,23 @@ function PlayingGameState(world)
 		world.camera.pos.x = this.player.rect.pos.x - 100;
 		
 		// cull objects off screen
-		world.platforms = world.platforms.filter(function(platform)
+		world.objects = world.objects.filter(function(o)
 		{
-			return platform.rect.right() > world.camera.pos.x;
+			o.isOnScreen = o.rect.right() > world.camera.pos.x;
+			return o.isOnScreen;
 		});
 		
-		world.fruits = world.fruits.filter(function(fruit)
+		// remove culled platforms.
+		world.platforms = world.platforms.filter(function(p)
 		{
-			return fruit.rect.right() > world.camera.pos.x;
+			return p.isOnScreen;
 		});
 	}
 	
 	this.draw = function(renderer)
 	{
-		// Background
-		world.background.draw(renderer);
+		world.draw();
 		
-		// The World
-		var ctx = renderer.context;
-		ctx.save();
-		
-		ctx.translate(-world.camera.pos.x, -world.camera.pos.y);
-		
-		world.platforms.forEach(function (p) { p.draw(renderer); });
-		world.fruits.forEach(function (f) { f.draw(renderer); });
-		
-		this.player.draw(renderer);
-		
-		ctx.restore();
-		
-		// HUD
 		this.scoreDisplay.draw(renderer);
 	}
 }

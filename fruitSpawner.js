@@ -24,7 +24,7 @@ function FruitSpawner()
 		if (this.distanceUntilNextFruit <= 0)
 		{
 			var newFruit = createNewFruit(world.resources.fruit, world.camera, world.renderer);
-			world.fruits.push(newFruit);
+			world.objects.push(newFruit);
 			
 			this.distanceUntilNextFruit = 50;
 		}
