@@ -69,8 +69,10 @@ function Player(characterModel)
 			return;
 		}
 		
-		var gravity = this.isJumping() ? playerConstants.jumpGravity : playerConstants.normalGravity;
+		this.rect.pos.x += world.scrollSpeed;
 		
+		var gravity = this.isJumping() ? playerConstants.jumpGravity : playerConstants.normalGravity;
+				
 		this.yVel += gravity;
 		this.yVel = Math.min(this.yVel, playerConstants.maxYVelocity);
 		

@@ -11,6 +11,7 @@ var world =
 	
 	resources: null,
 	renderer: null,
+	camera: null,
 	score: 0,
 	highscore: 0,
 };
@@ -22,6 +23,7 @@ function init()
 	var canvas = document.getElementById("TheCanvas");
 	
 	world.renderer = new Renderer(canvas);
+	world.camera = new Camera();
 	world.resources = new Resources();
 	
 	world.background = new Sprite(world.resources.background);

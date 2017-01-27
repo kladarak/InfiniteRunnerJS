@@ -82,7 +82,7 @@ function Platform(widthUnits, heightUnits, groundImages)
 
 var lastPlatformHeight = 3;
 
-function createRandomPlatform(groundImages, renderer)
+function createRandomPlatform(groundImages, camera, renderer)
 {
 	var maxHeightUnits = lastPlatformHeight + 4;
 	maxHeightUnits = clamp(maxHeightUnits, 1, 8);
@@ -92,7 +92,7 @@ function createRandomPlatform(groundImages, renderer)
 	lastPlatformHeight = heightUnits;
 	
 	var platform = new Platform(widthUnits, heightUnits, groundImages);
-	platform.rect.pos.x = renderer.screenWidth;
+	platform.rect.pos.x = camera.pos.x + renderer.screenWidth;
 	platform.rect.pos.y = renderer.screenHeight - platform.rect.height;
 	
 	return platform;

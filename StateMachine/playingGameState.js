@@ -2,7 +2,6 @@ function PlayingGameState(world)
 {
 	this.scoreDisplay		= new ScoreDisplay();	
 	this.platformSpawner	= new PlatformSpawner();
-	this.platformUpdater	= new PlatformUpdater();
 	this.fruitSpawner		= new FruitSpawner();
 
 	this.player = null;
@@ -14,6 +13,7 @@ function PlayingGameState(world)
 		world.progress = 0;
 		world.score = 0;
 		world.scrollSpeed = 0;
+		world.camera.pos = new Vector(0, 0);
 		
 		var firstPlatform = new Platform(20, 3, world.resources.ground);
 		firstPlatform.rect.pos.x = 0;
@@ -56,20 +56,45 @@ function PlayingGameState(world)
 		world.score++;
 		world.scrollSpeed = (world.progress / 2000) + 3;
 		
-		this.platformUpdater.update(world);
 		this.platformSpawner.update(world);
 		this.fruitSpawner.update(world);
 		this.player.update(world);
 		this.scoreDisplay.update(world);
+		
+		// update camera to track player
+		world.camera.pos.x = this.player.rect.pos.x - 100;
+		
+		// cull objects off screen
+		world.platforms = world.platforms.filter(function(platform)
+		{
+			return platform.rect.right() > world.camera.pos.x;
+		});
+		
+		world.fruits = world.fruits.filter(function(fruit)
+		{
+			return fruit.rect.right() > world.camera.pos.x;
+		});
 	}
 	
 	this.draw = function(renderer)
 	{
+		// Background
 		world.background.draw(renderer);
+		
+		// The World
+		var ctx = renderer.context;
+		ctx.save();
+		
+		ctx.translate(-world.camera.pos.x, -world.camera.pos.y);
+		
 		world.platforms.forEach(function (p) { p.draw(renderer); });
 		world.fruits.forEach(function (f) { f.draw(renderer); });
 		
 		this.player.draw(renderer);
+		
+		ctx.restore();
+		
+		// HUD
 		this.scoreDisplay.draw(renderer);
 	}
 }
