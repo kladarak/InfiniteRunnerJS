@@ -4,7 +4,7 @@ function PlatformUpdater()
 	{
 		world.platforms.forEach(function (p)
 		{
-			p.rect.x -= world.scrollSpeed;
+			p.rect.pos.x -= world.scrollSpeed;
 			p.isOnScreen = p.rect.right() > 0;
 		});
 		

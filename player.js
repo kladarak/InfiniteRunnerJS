@@ -95,7 +95,7 @@ function Player(characterModel)
 		if (runningOnPlatform)
 		{
 			this.setState( playerStates.run );
-			this.rect.y = runningOnPlatform.rect.y - this.rect.height;
+			this.rect.pos.y = runningOnPlatform.rect.top() - this.rect.height;
 			this.yVel = 0;
 			this.jumpCount = 0;
 		}
@@ -106,10 +106,10 @@ function Player(characterModel)
 				this.setState( playerStates.fall );
 			}
 			
-			this.rect.y = nextBotY - this.rect.height;
+			this.rect.pos.y = nextBotY - this.rect.height;
 		}
 		
-		this.isAlive = this.rect.y < world.renderer.screenHeight;
+		this.isAlive = this.rect.pos.y < world.renderer.screenHeight;
 		
 		this.model.update(world);
 	}

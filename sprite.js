@@ -12,7 +12,7 @@ function Sprite(inImage)
 	{
 		if (this.img)
 		{
-			renderer.context.drawImage(this.img, this.rect.x, this.rect.y, this.rect.width, this.rect.height);
+			renderer.context.drawImage(this.img, this.rect.pos.x, this.rect.pos.y, this.rect.width, this.rect.height);
 		}
 	};
 }

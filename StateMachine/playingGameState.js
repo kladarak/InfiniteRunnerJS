@@ -16,8 +16,8 @@ function PlayingGameState(world)
 		world.scrollSpeed = 0;
 		
 		var firstPlatform = new Platform(20, 3, world.resources.ground);
-		firstPlatform.rect.x = 0;
-		firstPlatform.rect.y = world.renderer.screenHeight - firstPlatform.rect.height;
+		firstPlatform.rect.pos.x = 0;
+		firstPlatform.rect.pos.y = world.renderer.screenHeight - firstPlatform.rect.height;
 		world.platforms.push(firstPlatform);
 		
 		this.player = new Player(world.selectedModel);

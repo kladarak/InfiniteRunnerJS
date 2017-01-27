@@ -31,7 +31,7 @@ function FruitSpawner()
 		
 		world.fruits.forEach(function (f)
 		{
-			f.rect.x -= world.scrollSpeed;
+			f.rect.pos.x -= world.scrollSpeed;
 			f.isOnScreen = f.rect.right() > 0;
 		});
 		

@@ -52,8 +52,8 @@ function Platform(widthUnits, heightUnits, groundImages)
 			}
 			
 			var tile = new Sprite(img);
-			tile.rect.x = x * defaultTileWidth;
-			tile.rect.y = y * defaultTileHeight;
+			tile.rect.pos.x = x * defaultTileWidth;
+			tile.rect.pos.y = y * defaultTileHeight;
 			tile.rect.width = defaultTileWidth;
 			tile.rect.height = defaultTileHeight;
 			this.tiles.push(tile);
@@ -69,7 +69,7 @@ function Platform(widthUnits, heightUnits, groundImages)
 		var ctx = renderer.context;
 		ctx.save();
 		
-		ctx.translate(this.rect.x, this.rect.y);
+		ctx.translate(this.rect.pos.x, this.rect.pos.y);
 		
 		this.tiles.forEach(function(tile)
 		{
@@ -92,8 +92,8 @@ function createRandomPlatform(groundImages, renderer)
 	lastPlatformHeight = heightUnits;
 	
 	var platform = new Platform(widthUnits, heightUnits, groundImages);
-	platform.rect.x = renderer.screenWidth;
-	platform.rect.y = renderer.screenHeight - platform.rect.height;
+	platform.rect.pos.x = renderer.screenWidth;
+	platform.rect.pos.y = renderer.screenHeight - platform.rect.height;
 	
 	return platform;
 }
