@@ -1,9 +1,8 @@
 function PlayingGameState(world)
 {
-	this.scoreDisplay		= new ScoreDisplay();	
-	this.platformSpawner	= new PlatformSpawner();
-	this.fruitSpawner		= new FruitSpawner();
-	this.player				= null;
+	this.scoreDisplay			= new ScoreDisplay();
+	this.environmentGenerator	= new EnvironmentGenerator(world);
+	this.player					= null;
 	
 	this.onEnter = function(world)
 	{
@@ -57,8 +56,7 @@ function PlayingGameState(world)
 		world.score++;
 		world.scrollSpeed = (world.progress / 2000) + 3;
 		
-		this.platformSpawner.update(world);
-		this.fruitSpawner.update(world);
+		this.environmentGenerator.update(world);
 		this.player.update(world);
 		this.scoreDisplay.update(world);
 		

@@ -9,8 +9,6 @@ function Platform(widthUnits, heightUnits, groundImages)
 	this.rect.width = defaultTileWidth * widthUnits;
 	this.rect.height = defaultTileHeight * heightUnits;
 	
-	this.isOnScreen = true;
-	
 	for (var x = 0; x < widthUnits; ++x)
 	{
 		for (var y = 0; y < heightUnits; ++y)
@@ -60,10 +58,6 @@ function Platform(widthUnits, heightUnits, groundImages)
 		}
 	}
 	
-	this.update = function(world)
-	{
-	};
-	
 	this.draw = function(renderer)
 	{
 		var ctx = renderer.context;
@@ -80,20 +74,19 @@ function Platform(widthUnits, heightUnits, groundImages)
 	};
 }
 
-var lastPlatformHeight = 3;
-
-function createRandomPlatform(groundImages, camera, renderer)
+function PlatformFactory(groundImages)
 {
-	var maxHeightUnits = lastPlatformHeight + 4;
-	maxHeightUnits = clamp(maxHeightUnits, 1, 8);
+	this.lastPlatformHeight = 3;
 	
-	var widthUnits = getRandomInt(2, 20);
-	var heightUnits = getRandomInt(1, maxHeightUnits);
-	lastPlatformHeight = heightUnits;
+	this.createRandomPlatform = function()
+	{
+		var maxHeightUnits = this.lastPlatformHeight + 4;
+		maxHeightUnits = clamp(maxHeightUnits, 1, 8);
 	
-	var platform = new Platform(widthUnits, heightUnits, groundImages);
-	platform.rect.pos.x = camera.pos.x + renderer.screenWidth;
-	platform.rect.pos.y = renderer.screenHeight - platform.rect.height;
-	
-	return platform;
+		var widthUnits = getRandomInt(2, 20);
+		var heightUnits = getRandomInt(1, maxHeightUnits);
+		this.lastPlatformHeight = heightUnits;
+		
+		return new Platform(widthUnits, heightUnits, groundImages);
+	}
 }
