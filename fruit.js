@@ -17,6 +17,9 @@ function Fruit(img)
 		{
 			this.visible = false;
 			world.score += 100;
+			
+			var scorePopUp = new ScorePopUp(100, this.rect.centre());
+			world.objects.push(scorePopUp);
 		}
 	};
 	
