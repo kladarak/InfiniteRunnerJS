@@ -3,8 +3,11 @@ function Fruit(img)
 	var size = 50;
 	
 	this.sprite = new Sprite(img);
+	this.sprite.rect = new Rect(0, 0, size, size);
 	this.rect = new Rect(0, 0, size, size);
 	this.visible = true;
+	this.rotation = 0;
+	this.rotDelta = Math.PI / 64;
 	
 	this.update = function(world)
 	{
@@ -12,6 +15,13 @@ function Fruit(img)
 		{
 			return;
 		}
+		
+		if (Math.abs(this.rotation) > (Math.PI / 8))
+		{
+			this.rotDelta = -this.rotDelta;
+		}
+		
+		this.rotation += this.rotDelta;
 		
 		if (world.player.rect.containsPoint(this.rect.centre()))
 		{
@@ -25,11 +35,24 @@ function Fruit(img)
 	
 	this.draw = function(renderer)
 	{
-		if (this.visible)
+		if (!this.visible)
 		{
-			this.sprite.rect = this.rect;
-			this.sprite.draw(renderer);
+			return;
 		}
+	
+		var ctx = renderer.context;
+		ctx.save();
+		
+		var centre = this.rect.centre();
+		ctx.translate(centre.x, centre.y);
+		ctx.rotate(this.rotation);
+		
+		var spriteCentre = this.sprite.rect.centre();
+		ctx.translate(-spriteCentre.x, -spriteCentre.y);
+		
+		this.sprite.draw(renderer);
+		
+		ctx.restore();
 	};
 }
 
