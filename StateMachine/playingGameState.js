@@ -57,6 +57,7 @@ function PlayingGameState(world)
 		world.scrollSpeed = (world.progress / 2000) + 3;
 		
 		this.environmentGenerator.update(world);
+		world.objects.forEach(function (o) { o.update(world); });
 		this.player.update(world);
 		this.scoreDisplay.update(world);
 		

@@ -58,6 +58,11 @@ function Platform(widthUnits, heightUnits, groundImages)
 		}
 	}
 	
+	this.update = function(world)
+	{
+		
+	}
+	
 	this.draw = function(renderer)
 	{
 		var ctx = renderer.context;

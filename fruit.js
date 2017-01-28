@@ -4,12 +4,30 @@ function Fruit(img)
 	
 	this.sprite = new Sprite(img);
 	this.rect = new Rect(0, 0, size, size);
+	this.visible = true;
+	
+	this.update = function(world)
+	{
+		if (!this.visible)
+		{
+			return;
+		}
+		
+		if (world.player.rect.containsPoint(this.rect.centre()))
+		{
+			this.visible = false;
+			world.score += 100;
+		}
+	};
 	
 	this.draw = function(renderer)
 	{
-		this.sprite.rect = this.rect;
-		this.sprite.draw(renderer);
-	}
+		if (this.visible)
+		{
+			this.sprite.rect = this.rect;
+			this.sprite.draw(renderer);
+		}
+	};
 }
 
 Fruit.size = 50;
