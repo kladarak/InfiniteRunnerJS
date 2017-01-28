@@ -2,6 +2,7 @@ function EnvironmentGenerator(world)
 {
 	var platformFactory	= new PlatformFactory(world.resources.ground);
 	var fruitFactory	= new FruitFactory(world.resources.fruit);
+	var envDecorFactory = new EnvironmentDecorationFactory(world.resources.envDecor);
 	
 	var shouldCreateAnotherSection = function(world)
 	{
@@ -32,6 +33,24 @@ function EnvironmentGenerator(world)
 		return newPlatform;
 	};
 	
+	var addDecorations = function(world, platform)
+	{
+		var platformWidth = platform.rect.width;
+		var widthUnits = platformWidth / defaultTileWidth;
+		var numDecorations = getRandomInt(1, widthUnits * 0.7);
+		
+		for (var i = 0; i < numDecorations; ++i)
+		{
+			var decor = envDecorFactory.createRandomDecoration();
+			var platformSpace = platformWidth - decor.rect.width;
+			
+			decor.rect.pos.x = platform.rect.left() + getRandomFloat(0, platformSpace);
+			decor.rect.pos.y = platform.rect.top() - decor.rect.height;
+			
+			world.objects.push(decor);
+		}
+	};
+	
 	var createFruitOnPlatform = function(world, platform)
 	{
 		var platformWidth = platform.rect.width;
@@ -42,9 +61,9 @@ function EnvironmentGenerator(world)
 		var numFruit = getRandomInt(0, maxNumFruit) + 1;
 		
 		var fruitRowWidth = numFruit * distanceBetweenFruit;
-		var remainingWidth = platformWidth - fruitRowWidth;
+		var platformSpace = platformWidth - fruitRowWidth;
 
-		var x = platform.rect.left() + getRandomFloat(0, remainingWidth);
+		var x = platform.rect.left() + getRandomFloat(0, platformSpace);
 		var y = platform.rect.top() - 200;
 		
 		for (var i = 0; i < numFruit; ++i)
@@ -65,6 +84,7 @@ function EnvironmentGenerator(world)
 		}
 		
 		var newPlatform = createNewPlatform(world);
+		addDecorations(world, newPlatform);
 		createFruitOnPlatform(world, newPlatform);
 	};
 }

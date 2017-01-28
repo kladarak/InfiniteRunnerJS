@@ -49,19 +49,28 @@ function Resources()
 {
 	var tilesAssetPath		= "freetileset/png/Tiles/";
 	var bgAssetPath			= "freetileset/png/BG/";
+	var envDecorAssetPath	= "freetileset/png/Object/";
 	var catAssetPath		= "catndog/png/cat/";
 	var dogAssetPath		= "catndog/png/dog/";
 	var fruitAssetPath		= "cake_128/";
 	
 	this.background			= createImage(bgAssetPath + "BG.png");
 	
-	this.ground = {}
+	this.ground = {};
 	this.ground.topLeft		= createImage(tilesAssetPath + "1.png");
 	this.ground.topMiddle	= createImage(tilesAssetPath + "2.png");
 	this.ground.topRight	= createImage(tilesAssetPath + "3.png");
 	this.ground.left		= createImage(tilesAssetPath + "4.png");
 	this.ground.middle		= createImage(tilesAssetPath + "5.png");
 	this.ground.right		= createImage(tilesAssetPath + "6.png");
+	
+	this.envDecor = {};
+	this.envDecor.bushes	= createImageSpriteSet(envDecorAssetPath + "Bush (", ").png", 4);
+	this.envDecor.mushrooms	= createImageSpriteSet(envDecorAssetPath + "Mushroom_", ".png", 2);
+	this.envDecor.signs		= createImageSpriteSet(envDecorAssetPath + "Sign_", ".png", 2);
+	this.envDecor.trees		= createImageSpriteSet(envDecorAssetPath + "Tree_", ".png", 3);
+	this.envDecor.crate		= createImage(envDecorAssetPath + "Crate.png");
+	this.envDecor.stone		= createImage(envDecorAssetPath + "Stone.png");
 	
 	this.cat 				= createAnimalSpriteSets(catAssetPath);
 	this.dog 				= createAnimalSpriteSets(dogAssetPath);
