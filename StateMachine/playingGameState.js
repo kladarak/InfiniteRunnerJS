@@ -9,9 +9,7 @@ function PlayingGameState(world)
 	{
 		world.platforms = [];
 		world.objects = [];
-		world.progress = 0;
 		world.score = 0;
-		world.scrollSpeed = 0;
 		world.camera.pos = new Vector(0, 0);
 		
 		var firstPlatform = new Platform(20, 3, world.resources.ground);
@@ -33,11 +31,23 @@ function PlayingGameState(world)
 		switch(e.key)
 		{
 			case " ":
+			case "w":
+			case "ArrowUp":
 				if (!this.jumpKeyDown)
 				{
 					this.player.setJumping(true);
 					this.jumpKeyDown = true;
 				}
+				break;
+				
+			case "a":
+			case "ArrowLeft":
+				this.player.moveLeft();
+				break;
+				
+			case "d":
+			case "ArrowRight":
+				this.player.moveRight();
 				break;
 		}
 	}
@@ -47,25 +57,41 @@ function PlayingGameState(world)
 		switch(e.key)
 		{
 			case " ":
+			case "w":
+			case "ArrowUp":
 				this.player.setJumping(false);
 				this.jumpKeyDown = false;
+				break;
+				
+			case "a":
+			case "ArrowLeft":
+				if (!this.player.facingRight)
+				{
+					this.player.stopMoving();
+				}
+				break;
+				
+			case "d":
+			case "ArrowRight":
+				if (this.player.facingRight)
+				{
+					this.player.stopMoving();
+				}
 				break;
 		}
 	}
 	
 	this.update = function(world)
 	{
-		world.progress++;
-		world.score++;
-		world.scrollSpeed = (world.progress / 2000) + 3;
-		
 		this.environmentGenerator.update(world);
 		world.objects.forEach(function (o) { o.update(world); });
 		this.player.update(world);
 		this.scoreDisplay.update(world);
 		
 		// update camera to track player
-		world.camera.pos.x = this.player.rect.pos.x - 100;
+		var cameraTrackDistance = world.renderer.screenWidth * 0.4;
+		var proposedCameraX = this.player.rect.pos.x - cameraTrackDistance;
+		world.camera.pos.x = Math.max(proposedCameraX, world.camera.pos.x);
 		
 		// cull objects off screen
 		world.objects = world.objects.filter(function(o)
