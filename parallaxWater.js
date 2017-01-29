@@ -45,21 +45,28 @@ function ParallaxWater(resources)
 	this.generatedX = 0;
 	this.waterSections = [];
 	this.camera = null;
+	this.xOffset = 0;
 	
 	var waterParallaxFactor = 1.2;
+	
+	this.getX = function()
+	{
+		return this.camera.pos.x * waterParallaxFactor + this.xOffset;
+	};
 	
 	this.update = function(world)
 	{
 		this.camera = world.camera;
+		this.xOffset += 0.5;
 		
-		var cameraX = world.camera.pos.x * waterParallaxFactor;
+		var x = this.getX();
 		
 		this.waterSections = this.waterSections.filter(function(w)
 		{
-			return w.rect.right() > cameraX;
+			return w.rect.right() > x;
 		});
 		
-		var screenRight = cameraX + world.renderer.screenWidth;
+		var screenRight = x + world.renderer.screenWidth;
 		
 		while (this.generatedX < screenRight)
 		{
@@ -77,7 +84,7 @@ function ParallaxWater(resources)
 		var ctx = renderer.context;
 		ctx.save();
 		
-		ctx.translate(-this.camera.pos.x * waterParallaxFactor, -this.camera.pos.y);
+		ctx.translate(-this.getX(), -this.camera.pos.y);
 		
 		for (w of this.waterSections) { w.draw(renderer); }
 		
