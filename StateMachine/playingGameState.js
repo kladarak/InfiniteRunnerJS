@@ -92,9 +92,18 @@ function PlayingGameState(world)
 	this.updateCamera = function(world)
 	{
 		// update camera to track player
-		var cameraTrackDistance = world.renderer.screenWidth * 0.4;
-		var proposedCameraX = this.player.rect.pos.x - cameraTrackDistance;
+		var cameraTrackXDistance = world.renderer.screenWidth * 0.4;
+		var proposedCameraX = this.player.rect.pos.x - cameraTrackXDistance;
 		world.camera.pos.x = Math.max(proposedCameraX, world.camera.pos.x);
+		
+		var cameraTrackYDistanceMin = world.renderer.screenHeight * 0.2;
+		var cameraTrackYDistanceMax = world.renderer.screenHeight * 0.5;
+		
+		var cameraY = world.camera.pos.y;
+		cameraY = Math.min(cameraY, this.player.rect.pos.y - cameraTrackYDistanceMin);
+		cameraY = Math.max(cameraY, this.player.rect.pos.y - cameraTrackYDistanceMax);
+		cameraY = Math.min(cameraY, 0);
+		world.camera.pos.y = cameraY;
 	}
 	
 	this.cullObjectsOffscreen = function(world)
