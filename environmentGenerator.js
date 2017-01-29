@@ -4,20 +4,15 @@ function EnvironmentGenerator(world)
 	var fruitFactory	= new FruitFactory(world.resources.fruit);
 	var envDecorFactory = new EnvironmentDecorationFactory(world.resources.envDecor);
 	
+	var generatedX = world.renderer.screenWidth;
+	var minGapSize = defaultTileWidth;
+	
 	var shouldCreateAnotherSection = function(world)
 	{
-		var anotherSectionNeeded = true;
+		var toTheRightOfScreen = world.camera.pos.x + world.renderer.screenWidth;
+		var gap = toTheRightOfScreen - generatedX;
 		
-		if (world.platforms.length > 0)
-		{
-			var lastPlatform = world.platforms[world.platforms.length - 1];
-			var toTheRightOfScreen = world.camera.pos.x + world.renderer.screenWidth;
-			var distanceFromScreenRight = toTheRightOfScreen - lastPlatform.rect.right();
-			
-			anotherSectionNeeded = (distanceFromScreenRight >= defaultTileWidth);
-		}
-		
-		return anotherSectionNeeded;
+		return (gap >= getRandomFloat(minGapSize, minGapSize * 3));
 	};
 	
 	var createNewGround = function(world)
@@ -26,9 +21,6 @@ function EnvironmentGenerator(world)
 		
 		newGround.rect.pos.x = world.camera.pos.x + world.renderer.screenWidth;
 		newGround.rect.pos.y = world.renderer.screenHeight - newGround.rect.height;
-		
-		world.objects.push(newGround);
-		world.platforms.push(newGround);
 		
 		return newGround;
 	};
@@ -106,8 +98,37 @@ function EnvironmentGenerator(world)
 			return;
 		}
 		
-		var newGround = createNewGround(world);
-		addDecorations(world, newGround);
-		createFruitOnPlatform(world, newGround);
+		var newGrounds = [];
+		for (var i = 1; i <= getRandomInt(1, 5); ++i)
+		{
+			newGrounds.push( createNewGround(world) );
+		}
+		
+		// scatter the ground
+		{
+			var ground = newGrounds[0];
+			
+			for (var i = 1; i < newGrounds.length; ++i)
+			{
+				var groundX = getRandomFloat(ground.rect.left(), ground.rect.right());
+				groundX	+= minGapSize;
+				ground = newGrounds[i];
+				ground.rect.pos.x = groundX;
+			}
+		}
+		
+		// sort height to lowest, so that they will get drawn in the correct order
+		newGrounds.sort( function (a,b) { return b.heightUnits - a.heightUnits; } );
+		
+		for (ground of newGrounds)
+		{
+			world.objects.push(ground);
+			world.platforms.push(ground);
+			
+			addDecorations(world, ground);
+			createFruitOnPlatform(world, ground);
+			
+			generatedX = Math.max(ground.rect.right(), generatedX);
+		}
 	};
 }

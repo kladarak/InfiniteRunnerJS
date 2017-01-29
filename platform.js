@@ -3,6 +3,9 @@ var defaultTileHeight = 50;
 
 function Platform(widthUnits, heightUnits, groundImages)
 {
+	this.widthUnits = widthUnits;
+	this.heightUnits = heightUnits;
+	
 	this.tiles = [];
 	
 	this.rect = new Rect(0, 0);

@@ -1,7 +1,7 @@
 function PlayingGameState(world)
 {
 	this.scoreDisplay			= new ScoreDisplay();
-	this.environmentGenerator	= new EnvironmentGenerator(world);
+	this.environmentGenerator	= null;
 	this.parallaxWater			= null;
 	this.player					= null;
 	
@@ -21,7 +21,8 @@ function PlayingGameState(world)
 		world.player = new Player(world.selectedModel);
 		this.player = world.player;
 		
-		this.parallaxWater = new ParallaxWater(world.resources);
+		this.parallaxWater			= new ParallaxWater(world.resources);
+		this.environmentGenerator	= new EnvironmentGenerator(world);
 	}
 	
 	this.jumpKeyDown = false;
