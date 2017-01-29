@@ -64,6 +64,10 @@ function Resources()
 	this.ground.middle		= createImage(tilesAssetPath + "5.png");
 	this.ground.right		= createImage(tilesAssetPath + "6.png");
 	
+	this.water = {};
+	this.water.top			= createImage(tilesAssetPath + "17.png");
+	this.water.middle		= createImage(tilesAssetPath + "18.png");
+	
 	this.envDecor = {};
 	this.envDecor.bushes	= createImageSpriteSet(envDecorAssetPath + "Bush (", ").png", 4);
 	this.envDecor.mushrooms	= createImageSpriteSet(envDecorAssetPath + "Mushroom_", ".png", 2);

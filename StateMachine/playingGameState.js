@@ -2,6 +2,7 @@ function PlayingGameState(world)
 {
 	this.scoreDisplay			= new ScoreDisplay();
 	this.environmentGenerator	= new EnvironmentGenerator(world);
+	this.parallaxWater			= null;
 	this.player					= null;
 	
 	this.onEnter = function(world)
@@ -21,6 +22,8 @@ function PlayingGameState(world)
 		
 		world.player = new Player(world.selectedModel);
 		this.player = world.player;
+		
+		this.parallaxWater = new ParallaxWater(world.resources);
 	}
 	
 	this.jumpKeyDown = false;
@@ -76,11 +79,16 @@ function PlayingGameState(world)
 		{
 			return p.isOnScreen;
 		});
+		
+		// Update parallax effect
+		this.parallaxWater.update(world);
 	}
 	
 	this.draw = function(renderer)
 	{
 		world.draw();
+		
+		this.parallaxWater.draw(renderer);
 		
 		this.scoreDisplay.draw(renderer);
 	}
