@@ -5,14 +5,15 @@ function EnvironmentGenerator(world)
 	var envDecorFactory = new EnvironmentDecorationFactory(world.resources.envDecor);
 	
 	var generatedX = world.renderer.screenWidth;
-	var minGapSize = defaultTileWidth;
+	var defaultMinGapSize = defaultTileWidth;
+	var minGapSize = defaultMinGapSize;
 	
 	var shouldCreateAnotherSection = function(world)
 	{
 		var toTheRightOfScreen = world.camera.pos.x + world.renderer.screenWidth;
 		var gap = toTheRightOfScreen - generatedX;
 		
-		return (gap >= getRandomFloat(minGapSize, minGapSize * 3));
+		return gap >= minGapSize;
 	};
 	
 	var createNewGround = function(world)
@@ -111,7 +112,7 @@ function EnvironmentGenerator(world)
 			for (var i = 1; i < newGrounds.length; ++i)
 			{
 				var groundX = getRandomFloat(ground.rect.left(), ground.rect.right());
-				groundX	+= minGapSize;
+				groundX	+= defaultMinGapSize;
 				ground = newGrounds[i];
 				ground.rect.pos.x = groundX;
 			}
@@ -130,5 +131,7 @@ function EnvironmentGenerator(world)
 			
 			generatedX = Math.max(ground.rect.right(), generatedX);
 		}
+		
+		minGapSize = getRandomFloat(defaultMinGapSize, defaultMinGapSize * 4);
 	};
 }
