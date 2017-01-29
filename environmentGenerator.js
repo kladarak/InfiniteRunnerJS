@@ -80,7 +80,7 @@ function EnvironmentGenerator(world)
 		var groundSpace = groundWidth - fruitRowWidth;
 
 		var x = ground.rect.left() + getRandomFloat(0, groundSpace);
-		var y = ground.rect.top() - 200;
+		var y = ground.rect.top() - getRandomFloat(100, 400);
 		
 		for (var i = 0; i < numFruit; ++i)
 		{
