@@ -72,6 +72,22 @@ function update()
 	while (gameStateMachine.update(world));
 }
 
+// Use this function to check that objects get cleaned up correctly.
+function debugDraw()
+{
+	world.renderer.clearScreen();
+	
+	var ctx = world.renderer.context;
+	ctx.save();
+	
+	ctx.scale(0.6, 0.6);
+	ctx.translate(300, 50);
+	
+	gameStateMachine.currentState.draw(world.renderer);
+	
+	ctx.restore();
+}
+
 function draw()
 {
 	gameStateMachine.currentState.draw(world.renderer);
