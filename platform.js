@@ -89,7 +89,6 @@ function PlatformFactory(groundImages)
 	this.createRandomPlatform = function()
 	{
 		var maxHeightUnits = this.lastPlatformHeight + 4;
-		maxHeightUnits = clamp(maxHeightUnits, 1, 8);
 	
 		var widthUnits = getRandomInt(2, 20);
 		var heightUnits = getRandomInt(1, maxHeightUnits);
