@@ -82,33 +82,53 @@ function PlayingGameState(world)
 		}
 	}
 	
-	this.update = function(world)
+	this.updateWorld = function(world)
 	{
 		this.environmentGenerator.update(world);
 		world.objects.forEach(function (o) { o.update(world); });
 		this.player.update(world);
-		this.scoreDisplay.update(world);
-		
+	}
+	
+	this.updateCamera = function(world)
+	{
 		// update camera to track player
 		var cameraTrackDistance = world.renderer.screenWidth * 0.4;
 		var proposedCameraX = this.player.rect.pos.x - cameraTrackDistance;
 		world.camera.pos.x = Math.max(proposedCameraX, world.camera.pos.x);
-		
-		// cull objects off screen
+	}
+	
+	this.cullObjectsOffscreen = function(world)
+	{
 		world.objects = world.objects.filter(function(o)
 		{
 			o.isOnScreen = o.rect.right() > world.camera.pos.x;
 			return o.isOnScreen;
 		});
 		
-		// remove culled platforms.
 		world.platforms = world.platforms.filter(function(p)
 		{
 			return p.isOnScreen;
 		});
-		
-		// Update parallax effect
+	}
+	
+	this.updateParallaxEffect = function(world)
+	{
 		this.parallaxWater.update(world);
+	}
+	
+	this.updateHUD = function(world)
+	{
+		this.scoreDisplay.update(world);
+	}
+	
+	this.update = function(world)
+	{
+		this.updateWorld(world);
+		this.updateCamera(world);
+		this.updateParallaxEffect(world);
+		
+		this.updateHUD(world);
+		this.cullObjectsOffscreen(world);
 	}
 	
 	this.draw = function(renderer)
