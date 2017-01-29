@@ -1,6 +1,6 @@
 function EnvironmentGenerator(world)
 {
-	var groundFactory	= new groundFactory(world.resources.ground);
+	var groundFactory	= new PlatformFactory(world.resources.ground);
 	var fruitFactory	= new FruitFactory(world.resources.fruit);
 	var envDecorFactory = new EnvironmentDecorationFactory(world.resources.envDecor);
 	
