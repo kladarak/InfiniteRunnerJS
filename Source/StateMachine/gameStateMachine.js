@@ -1,4 +1,4 @@
-function createGameStateMachine(world)
+function createGameStateMachine()
 {
 	var sm = new StateMachine();
 	
@@ -8,10 +8,10 @@ function createGameStateMachine(world)
 		sm.transitions.push(transition);
 	};
 	
-	var loadingState			= new LoadingState(world);
-	var selectCharacterState	= new SelectCharacterState(world);
-	var playingGameState		= new PlayingGameState(world);
-	var gameOverState			= new GameOverState(world);
+	var loadingState			= new LoadingState();
+	var selectCharacterState	= new SelectCharacterState();
+	var playingGameState		= new PlayingGameState();
+	var gameOverState			= new GameOverState();
 	
 	sm.states.push(loadingState);
 	sm.states.push(selectCharacterState);
@@ -37,8 +37,6 @@ function createGameStateMachine(world)
 	{
 		return gameOverState.shouldRestartGame;
 	});
-	
-	sm.setCurrentState(loadingState);
 	
 	return sm;
 }

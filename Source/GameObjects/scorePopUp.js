@@ -3,7 +3,7 @@ function ScorePopUp(scoreValue, position)
 	this.score = scoreValue;
 	this.rect = new Rect(position.x, position.y, 200, 10);
 	
-	this.update = function(world)
+	this.update = function()
 	{
 		this.rect.pos.y -= 1;
 	};

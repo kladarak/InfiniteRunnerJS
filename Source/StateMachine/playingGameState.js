@@ -1,28 +1,33 @@
-function PlayingGameState(world)
+function PlayingGameState()
 {
 	this.scoreDisplay			= new ScoreDisplay();
 	this.environmentGenerator	= null;
 	this.parallaxWater			= null;
 	this.player					= null;
 	
-	this.onEnter = function(world)
+	this.onEnter = function(gameContext)
 	{
-		world.platforms = [];
-		world.objects = [];
-		world.score = 0;
-		world.camera.pos = new Vector(0, 0);
+		// Initialise world, camera, score
+		gameContext.world.platforms = [];
+		gameContext.world.objects = [];
+		gameContext.world.camera = new Camera();
+		gameContext.playerProfile.score = 0;
 		
-		var firstPlatform = new Platform(20, 3, world.resources.ground);
+		// Create first platform
+		var firstPlatform = new Platform(20, 3, gameContext.resources.ground);
 		firstPlatform.rect.pos.x = 0;
-		firstPlatform.rect.pos.y = world.renderer.screenHeight - firstPlatform.rect.height;
-		world.objects.push(firstPlatform);
-		world.platforms.push(firstPlatform);
+		firstPlatform.rect.pos.y = gameContext.renderer.viewport.height - firstPlatform.rect.height;
+		gameContext.world.objects.push(firstPlatform);
+		gameContext.world.platforms.push(firstPlatform);
 		
-		world.player = new Player(world.selectedModel);
-		this.player = world.player;
+		// Create a player with the selected character model
+		var characterModelFactory = new CharacterModelFactory(gameContext.resources);
+		var characterModel = characterModelFactory.createModel(gameContext.playerProfile.selectedCharacter);
+		this.player = new Player(characterModel);
+		gameContext.world.player = this.player;
 		
-		this.parallaxWater			= new ParallaxWater(world.resources);
-		this.environmentGenerator	= new EnvironmentGenerator(world);
+		this.parallaxWater			= new ParallaxWater();
+		this.environmentGenerator	= new EnvironmentGenerator(gameContext);
 	}
 	
 	this.jumpKeyDown = false;
@@ -82,67 +87,50 @@ function PlayingGameState(world)
 		}
 	}
 	
-	this.updateWorld = function(world)
-	{
-		this.environmentGenerator.update(world);
-		world.objects.forEach(function (o) { o.update(world); });
-		this.player.update(world);
-	}
-	
-	this.updateCamera = function(world)
+	// TODO: Create subclass of camera which has reference to player to track.
+	var updateCamera = function(gameContext)
 	{
 		// update camera to track player
-		var cameraTrackXDistance = world.renderer.screenWidth * 0.4;
-		var proposedCameraX = this.player.rect.pos.x - cameraTrackXDistance;
-		world.camera.pos.x = Math.max(proposedCameraX, world.camera.pos.x);
 		
-		var cameraTrackYDistanceMin = world.renderer.screenHeight * 0.2;
-		var cameraTrackYDistanceMax = world.renderer.screenHeight * 0.5;
+		var viewport	= gameContext.renderer.viewport;
+		var playerPos	= gameContext.world.player.rect.pos;
+		var cameraPos	= gameContext.world.camera.pos;
 		
-		var cameraY = world.camera.pos.y;
-		cameraY = Math.min(cameraY, this.player.rect.pos.y - cameraTrackYDistanceMin);
-		cameraY = Math.max(cameraY, this.player.rect.pos.y - cameraTrackYDistanceMax);
-		cameraY = Math.min(cameraY, 0);
-		world.camera.pos.y = cameraY;
-	}
-	
-	this.cullObjectsOffscreen = function(world)
-	{
-		world.objects = world.objects.filter(function(o)
-		{
-			o.isOnScreen = o.rect.right() > world.camera.pos.x;
-			return o.isOnScreen;
-		});
+		var cameraTrackXDistance = viewport.width * 0.4;
+		var proposedCameraX = playerPos.x - cameraTrackXDistance;
+		cameraPos.x = Math.max(proposedCameraX, cameraPos.x);
 		
-		world.platforms = world.platforms.filter(function(p)
-		{
-			return p.isOnScreen;
-		});
-	}
-	
-	this.updateParallaxEffect = function(world)
-	{
-		this.parallaxWater.update(world);
-	}
-	
-	this.updateHUD = function(world)
-	{
-		this.scoreDisplay.update(world);
-	}
-	
-	this.update = function(world)
-	{
-		this.updateWorld(world);
-		this.updateCamera(world);
-		this.updateParallaxEffect(world);
+		var cameraTrackYDistanceMin = viewport.height * 0.2;
+		var cameraTrackYDistanceMax = viewport.height * 0.5;
 		
-		this.updateHUD(world);
-		this.cullObjectsOffscreen(world);
+		cameraPos.y = Math.min(cameraPos.y, playerPos.y - cameraTrackYDistanceMin);
+		cameraPos.y = Math.max(cameraPos.y, playerPos.y - cameraTrackYDistanceMax);
+		cameraPos.y = Math.min(cameraPos.y, 0);
 	}
 	
-	this.draw = function(renderer)
+	this.update = function(gameContext)
 	{
-		world.draw();
+		this.environmentGenerator.update();
+		
+		gameContext.world.update(gameContext);
+		
+		this.player.update(gameContext);
+		
+		updateCamera(gameContext);
+		
+		// TODO: Place parallax effects into world.
+		this.parallaxWater.update(gameContext);
+		
+		this.scoreDisplay.update(gameContext);
+		
+		gameContext.world.cullObjectsOffScreen();
+	}
+	
+	this.draw = function(gameContext)
+	{
+		var renderer = gameContext.renderer;
+		
+		gameContext.world.draw(renderer);
 		
 		this.parallaxWater.draw(renderer);
 		

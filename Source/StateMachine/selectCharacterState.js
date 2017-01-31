@@ -1,15 +1,17 @@
-function SelectCharacterState(world)
+function SelectCharacterState()
 {
-	this.characterSelectScreen = new CharacterSelectScreen(world);
-	
+	this.characterSelectScreen = null;
 	this.hasSelectedCharacter = false;
+	this.playerProfile = null;
 	
-	this.onEnter = function(world)
+	this.onEnter = function(gameContext)
 	{
 		this.hasSelectedCharacter = false;
+		this.characterSelectScreen = new CharacterSelectScreen(gameContext);
+		this.playerProfile = gameContext.playerProfile;
 	}
 	
-	this.onExit = function(world)
+	this.onExit = function(gameContext)
 	{
 		this.hasSelectedCharacter = false;	
 	}
@@ -21,13 +23,13 @@ function SelectCharacterState(world)
 			case "ArrowLeft":
 			case "a":
 			case "A":
-				world.selectedModel = world.catModel;
+				this.playerProfile.selectedCharacter = characters.cat;
 				break;
 				
 			case "ArrowRight":
 			case "d":
 			case "D":
-				world.selectedModel = world.dogModel;
+				this.playerProfile.selectedCharacter = characters.dog;
 				break;
 				
 			case " ":
@@ -36,16 +38,16 @@ function SelectCharacterState(world)
 		}
 	}
 	
-	this.update = function(world)
+	this.update = function(gameContext)
 	{
-		this.characterSelectScreen.update(world);
+		this.characterSelectScreen.update(gameContext);
 	}
 	
-	this.draw = function(renderer)
+	this.draw = function(gameContext)
 	{
-		world.background.draw(renderer);
+		gameContext.world.background.draw(gameContext.renderer);
 		
-		this.characterSelectScreen.draw(renderer);
+		this.characterSelectScreen.draw(gameContext.renderer);
 	}
 }
 

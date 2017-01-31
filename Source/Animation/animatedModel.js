@@ -1,8 +1,8 @@
 function AnimatedModel(animationSet, initialState)
 {
+	this.animations = animationSet;
 	this.state		= initialState;
 	this.rect		= new Rect(0, 0, 50, 50);
-	this.animations = animationSet;
 	
 	this.getCurrentAnimation = function()
 	{
@@ -18,9 +18,9 @@ function AnimatedModel(animationSet, initialState)
 		}
 	};
 	
-	this.update = function(world)
+	this.update = function()
 	{
-		this.getCurrentAnimation().update(world);
+		this.getCurrentAnimation().update();
 	};
 	
 	this.draw = function(renderer)

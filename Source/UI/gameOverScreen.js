@@ -9,7 +9,7 @@ function GameOverScreen()
 		
 		// Dim display
 		ctx.fillStyle = "rgba(200,200,200,0.5)";
-		ctx.fillRect(0, 0, renderer.screenWidth, renderer.screenHeight);
+		ctx.fillRect(0, 0, renderer.viewport.width, renderer.viewport.height);
 		
 		// Overlay with text
 		var lines = [];
@@ -24,8 +24,8 @@ function GameOverScreen()
 		
 		ctx.textAlign  = "center";
 		
-		var x = renderer.screenWidth / 2;
-		var y = renderer.screenHeight / 2;
+		var x = renderer.viewport.centreX();
+		var y = renderer.viewport.centreY();
 		y -= 50;
 
 		lines.forEach(function (line)

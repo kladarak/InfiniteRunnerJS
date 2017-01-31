@@ -1,32 +1,37 @@
-function EnvironmentGenerator(world)
+function EnvironmentGenerator(gameContext)
 {
-	var groundFactory	= new PlatformFactory(world.resources.ground);
-	var fruitFactory	= new FruitFactory(world.resources.fruit);
-	var envDecorFactory = new EnvironmentDecorationFactory(world.resources.envDecor);
+	// Object caches for ease
+	var world		= gameContext.world;
+	var camera		= gameContext.world.camera;
+	var viewport 	= gameContext.renderer.viewport;
+
+	// Factories
+	var groundFactory	= new PlatformFactory(gameContext.resources.ground);
+	var fruitFactory	= new FruitFactory(gameContext.resources.fruit);
+	var envDecorFactory = new EnvironmentDecorationFactory(gameContext.resources.envDecor);
 	
-	var generatedX = world.renderer.screenWidth;
-	var defaultMinGapSize = defaultTileWidth;
-	var minGapSize = defaultMinGapSize;
+	var generatedX			= viewport.width;
+	var defaultMinGapSize	= 50;
+	var minGapSize			= defaultMinGapSize;
 	
-	var shouldCreateAnotherSection = function(world)
+	var shouldCreateAnotherSection = function()
 	{
-		var toTheRightOfScreen = world.camera.pos.x + world.renderer.screenWidth;
+		var toTheRightOfScreen = camera.pos.x + viewport.width;
 		var gap = toTheRightOfScreen - generatedX;
-		
 		return gap >= minGapSize;
 	};
 	
-	var createNewGround = function(world)
+	var createNewGround = function()
 	{
 		var newGround = groundFactory.createRandomPlatform();
 		
-		newGround.rect.pos.x = world.camera.pos.x + world.renderer.screenWidth;
-		newGround.rect.pos.y = world.renderer.screenHeight - newGround.rect.height;
+		newGround.rect.pos.x = camera.pos.x + viewport.width;
+		newGround.rect.pos.y = viewport.height - newGround.rect.height;
 		
 		return newGround;
 	};
 	
-	var placeInWorldOnGround = function(object, world, ground)
+	var placeOnGround = function(object, ground)
 	{
 		var groundWidth = ground.rect.width;
 		var groundSpace = groundWidth - object.rect.width;
@@ -37,7 +42,7 @@ function EnvironmentGenerator(world)
 		world.objects.push(object);
 	};
 	
-	var addObjects = function(world, ground, probability, objFactory)
+	var addObjects = function(ground, probability, objFactory)
 	{
 		var groundWidth = ground.rect.width;
 		var widthUnits = groundWidth / defaultTileWidth;
@@ -48,26 +53,26 @@ function EnvironmentGenerator(world)
 		for (var i = 0; i < numObjects; ++i)
 		{
 			var obj = objFactory();
-			placeInWorldOnGround(obj, world, ground);
+			placeOnGround(obj, ground);
 			objects.push(obj);
 		}
 		
 		return objects;
 	};
 	
-	var addDecorations = function(world, ground)
+	var addDecorations = function(ground)
 	{
-		addObjects(world, ground, 0.3, envDecorFactory.createRandomTrees);
-		addObjects(world, ground, 0.7, envDecorFactory.createRandomBush);
-		addObjects(world, ground, 0.2, envDecorFactory.createStone);
+		addObjects(ground, 0.3, envDecorFactory.createRandomTrees);
+		addObjects(ground, 0.7, envDecorFactory.createRandomBush);
+		addObjects(ground, 0.2, envDecorFactory.createStone);
 
-		var crates = addObjects(world, ground, 0.2, envDecorFactory.createCrate);
+		var crates = addObjects(ground, 0.2, envDecorFactory.createCrate);
 		world.platforms.push.apply(world.platforms, crates);
 
-		addObjects(world, ground, 0.2, envDecorFactory.createRandomSigns);
+		addObjects(ground, 0.2, envDecorFactory.createRandomSigns);
 	};
 	
-	var createFruitOnPlatform = function(world, ground)
+	var createFruitOnPlatform = function(ground)
 	{
 		var groundWidth = ground.rect.width;
 		var distanceBetweenFruit = Fruit.size * 1.3;
@@ -92,9 +97,9 @@ function EnvironmentGenerator(world)
 		}
 	};
 	
-	this.update = function(world)
+	this.update = function()
 	{
-		if (!shouldCreateAnotherSection(world))
+		if (!shouldCreateAnotherSection())
 		{
 			return;
 		}
@@ -102,7 +107,7 @@ function EnvironmentGenerator(world)
 		var newGrounds = [];
 		for (var i = 1; i <= getRandomInt(1, 5); ++i)
 		{
-			newGrounds.push( createNewGround(world) );
+			newGrounds.push( createNewGround() );
 		}
 		
 		// scatter the ground
@@ -126,8 +131,8 @@ function EnvironmentGenerator(world)
 			world.objects.push(ground);
 			world.platforms.push(ground);
 			
-			addDecorations(world, ground);
-			createFruitOnPlatform(world, ground);
+			addDecorations(ground);
+			createFruitOnPlatform(ground);
 			
 			generatedX = Math.max(ground.rect.right(), generatedX);
 		}

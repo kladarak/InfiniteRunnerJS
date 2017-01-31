@@ -1,3 +1,9 @@
+var characters =
+{
+	cat: "cat",
+	dog: "dog"
+};
+
 var characterModelStates =
 {
 	dead: "dead",
@@ -38,4 +44,15 @@ function CharacterModelFactory(resources)
 	
 	this.createCatModel = function() { return createModel(resources.cat); };
 	this.createDogModel = function() { return createModel(resources.dog); };
+	
+	this.createModel = function(character)
+	{
+		switch (character)
+		{
+			case characters.cat: return this.createCatModel();
+			case characters.dog: return this.createDogModel();
+		}
+		
+		return null;
+	}
 };

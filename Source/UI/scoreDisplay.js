@@ -2,9 +2,9 @@ function ScoreDisplay()
 {
 	this.score = 0;
 	
-	this.update = function (world)
+	this.update = function (gameContext)
 	{
-		this.score = world.score;
+		this.score = gameContext.playerProfile.score;
 	};
 	
 	this.draw = function (renderer)

@@ -9,7 +9,7 @@ function Fruit(img)
 	this.rotation = 0;
 	this.rotDelta = Math.PI / 64;
 	
-	this.update = function(world)
+	this.update = function(gameContext)
 	{
 		if (!this.visible)
 		{
@@ -23,13 +23,13 @@ function Fruit(img)
 		
 		this.rotation += this.rotDelta;
 		
-		if (world.player.rect.containsPoint(this.rect.centre()))
+		if (gameContext.world.player.rect.containsPoint(this.rect.centre()))
 		{
 			this.visible = false;
-			world.score += 100;
+			gameContext.playerProfile.score += 100;
 			
 			var scorePopUp = new ScorePopUp(100, this.rect.centre());
-			world.objects.push(scorePopUp);
+			gameContext.world.objects.push(scorePopUp);
 		}
 	};
 	

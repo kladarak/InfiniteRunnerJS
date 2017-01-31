@@ -61,7 +61,7 @@ function Platform(widthUnits, heightUnits, groundImages)
 		}
 	}
 	
-	this.update = function(world)
+	this.update = function()
 	{
 		
 	}

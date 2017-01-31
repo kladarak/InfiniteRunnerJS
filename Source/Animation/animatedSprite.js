@@ -19,7 +19,7 @@ function AnimatedSprite(spriteImageFrames, loop)
 		this.frameIndex = 0;
 	};
 	
-	this.update = function(world)
+	this.update = function()
 	{
 		this.frameTime++;
 		

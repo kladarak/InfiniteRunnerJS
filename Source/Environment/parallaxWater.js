@@ -40,7 +40,7 @@ function WaterSection(resources)
 	};
 }
 
-function ParallaxWater(resources)
+function ParallaxWater()
 {
 	this.generatedX = 0;
 	this.waterSections = [];
@@ -54,9 +54,9 @@ function ParallaxWater(resources)
 		return this.camera.pos.x * waterParallaxFactor + this.xOffset;
 	};
 	
-	this.update = function(world)
+	this.update = function(gameContext)
 	{
-		this.camera = world.camera;
+		this.camera = gameContext.world.camera;
 		this.xOffset += 0.5;
 		
 		var x = this.getX();
@@ -66,13 +66,13 @@ function ParallaxWater(resources)
 			return w.rect.right() > x;
 		});
 		
-		var screenRight = x + world.renderer.screenWidth;
+		var screenRight = x + gameContext.renderer.viewport.width;
 		
 		while (this.generatedX < screenRight)
 		{
-			var section = new WaterSection(world.resources);
+			var section = new WaterSection(gameContext.resources);
 			section.rect.pos.x = this.generatedX;
-			section.rect.pos.y = world.renderer.screenHeight - (section.rect.height * 0.3);
+			section.rect.pos.y = gameContext.renderer.viewport.height - (section.rect.height * 0.3);
 			this.waterSections.push(section);
 			
 			this.generatedX += section.rect.width;

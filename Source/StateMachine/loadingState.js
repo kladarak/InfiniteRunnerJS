@@ -1,4 +1,4 @@
-function LoadingState(world)
+function LoadingState()
 {
 }
 

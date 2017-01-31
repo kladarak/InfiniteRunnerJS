@@ -1,12 +1,11 @@
-function Renderer(inCanvas)
+function Renderer(canvas)
 {
-	this.canvas = inCanvas;
-	this.context = inCanvas.getContext("2d");
-	this.screenWidth = inCanvas.width;
-	this.screenHeight = inCanvas.height;
+	this.canvas		= canvas;
+	this.context	= canvas.getContext("2d");
+	this.viewport	= new Rect(0, 0, canvas.width, canvas.height);
 	
 	this.clearScreen = function ()
 	{
-		this.context.clearRect(0, 0, this.screenWidth, this.screenHeight);
+		this.context.clearRect(0, 0, this.viewport.width, this.viewport.height);
 	}
 }

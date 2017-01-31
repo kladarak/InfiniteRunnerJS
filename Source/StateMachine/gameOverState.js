@@ -1,19 +1,21 @@
-function GameOverState(world)
+function GameOverState()
 {
 	this.shouldRestartGame = false;
 	this.gameOverScreen = new GameOverScreen();
 	
-	this.onEnter = function(world)
+	this.onEnter = function(gameContext)
 	{
 		this.shouldRestartGame = false;
 		
-		world.highscore = Math.max(world.score, world.highscore);
+		var score = gameContext.playerProfile.score;
 		
-		this.gameOverScreen.score = world.score;
-		this.gameOverScreen.highscore = world.highscore;
+		gameContext.highscore = Math.max(score, gameContext.highscore);
+		
+		this.gameOverScreen.score		= score;
+		this.gameOverScreen.highscore	= gameContext.highscore;
 	}
 	
-	this.onExit = function(world)
+	this.onExit = function(gameContext)
 	{
 		this.shouldRestartGame = false;
 	}
@@ -23,13 +25,15 @@ function GameOverState(world)
 		this.shouldRestartGame = true;
 	}
 	
-	this.update = function(world)
+	this.update = function(gameContext)
 	{
 	}
 	
-	this.draw = function(renderer)
+	this.draw = function(gameContext)
 	{
-		world.draw();
+		var renderer = gameContext.renderer;
+		
+		gameContext.world.draw(renderer);
 		
 		this.gameOverScreen.draw(renderer);
 	}

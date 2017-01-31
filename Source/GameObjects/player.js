@@ -92,12 +92,14 @@ function Player(characterModel)
 		this.xDirection = 0;
 	};
 				
-	this.update = function(world)
+	this.update = function(gameContext)
 	{
 		if (!this.isAlive)
 		{
 			return;
 		}
+		
+		var world = gameContext.world;
 		
 		if (this.xDirection === 0)
 		{
@@ -164,9 +166,9 @@ function Player(characterModel)
 			this.rect.pos.y = nextBotY - this.rect.height;
 		}
 		
-		this.isAlive = this.rect.pos.y < world.renderer.screenHeight;
+		this.isAlive = this.rect.pos.y < gameContext.deathY;
 		
-		this.model.update(world);
+		this.model.update();
 	}
 	
 	this.draw = function(renderer)
