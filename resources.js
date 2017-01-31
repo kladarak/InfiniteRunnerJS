@@ -53,6 +53,7 @@ function Resources()
 	var catAssetPath		= "catndog/png/cat/";
 	var dogAssetPath		= "catndog/png/dog/";
 	var fruitAssetPath		= "cake_128/";
+	var enemiesAssetPath	= "Enemies/";
 	
 	this.background			= createImage(bgAssetPath + "BG.png");
 	
@@ -97,4 +98,56 @@ function Resources()
 	}
 	
 	this.fruit.allFruits = allFruits;
+	
+	this.enemies = {};
+	
+	this.enemies.bat = {};
+	this.enemies.bat.fly = createImageSpriteSet(enemiesAssetPath + "Bat/fly/frame-", ".png", 2);
+	
+	this.enemies.dragon = {};
+	this.enemies.dragon.fly = createImageSpriteSet(enemiesAssetPath + "Dragon/fly/frame-", ".png", 4);
+	
+	this.enemies.blueMonster = {};
+	this.enemies.blueMonster.idle = createImageSpriteSet(enemiesAssetPath + "BlueMonster/idle/frame-", ".png", 6);
+	this.enemies.blueMonster.walk = createImageSpriteSet(enemiesAssetPath + "BlueMonster/walk/frame-", ".png", 2);
+	
+	this.enemies.gooseberryMonster = {};
+	this.enemies.gooseberryMonster.idle = createImageSpriteSet(enemiesAssetPath + "GooseberryMonster/idle/frame-", ".png", 8);
+	this.enemies.gooseberryMonster.walk = createImageSpriteSet(enemiesAssetPath + "GooseberryMonster/walk/frame-", ".png", 8);
+	
+	this.enemies.greenMonster = {};
+	this.enemies.greenMonster.idle = createImageSpriteSet(enemiesAssetPath + "GreenMonster/idle/frame-", ".png", 2);
+	this.enemies.greenMonster.hit = createImageSpriteSet(enemiesAssetPath + "GreenMonster/hit/frame-", ".png", 2);
+	
+	this.enemies.greyBlobMonster = {};
+	this.enemies.greyBlobMonster.idle = createImageSpriteSet(enemiesAssetPath + "GreyBlobMonster/idle/frame-", ".png", 10);
+	this.enemies.greyBlobMonster.hit = createImageSpriteSet(enemiesAssetPath + "GreyBlobMonster/hit/frame-", ".png", 6);
+	
+	this.enemies.iceMonster = {};
+	this.enemies.iceMonster.idle = createImageSpriteSet(enemiesAssetPath + "IceMonster/idle/frame-", ".png", 1);
+	
+	this.enemies.orangeMonster = {};
+	this.enemies.orangeMonster.idle = createImageSpriteSet(enemiesAssetPath + "OrangeMonster/idle/frame-", ".png", 2);
+	this.enemies.orangeMonster.hit = createImageSpriteSet(enemiesAssetPath + "OrangeMonster/hit/frame-", ".png", 1);
+	
+	this.enemies.orangeSpider = {};
+	this.enemies.orangeSpider.idle = createImageSpriteSet(enemiesAssetPath + "OrangeSpider/idle/frame-", ".png", 1);
+	
+	this.enemies.pinkBird = {};
+	this.enemies.pinkBird.fly = createImageSpriteSet(enemiesAssetPath + "PinkBird/fly/frame-", ".png", 2);
+	this.enemies.pinkBird.hit = createImageSpriteSet(enemiesAssetPath + "PinkBird/hit/frame-", ".png", 2);
+	
+	this.enemies.pinkMonster = {};
+	this.enemies.pinkMonster.idle = createImageSpriteSet(enemiesAssetPath + "PinkMonster/idle/frame-", ".png", 2);
+	this.enemies.pinkMonster.hit = createImageSpriteSet(enemiesAssetPath + "PinkMonster/hit/frame-", ".png", 1);
+	
+	this.enemies.redBird = {};
+	this.enemies.redBird.fly = createImageSpriteSet(enemiesAssetPath + "RedBird/fly/frame-", ".png", 2);
+	this.enemies.redBird.hit = createImageSpriteSet(enemiesAssetPath + "RedBird/hit/frame-", ".png", 2);
+	
+	this.enemies.rockMonster = {};
+	this.enemies.rockMonster.idle = createImageSpriteSet(enemiesAssetPath + "RockMonster/idle/frame-", ".png", 1);
+	
+	this.enemies.wormMonster = {};
+	this.enemies.wormMonster.idle = createImageSpriteSet(enemiesAssetPath + "WormMonster/idle/frame-", ".png", 8);
 }
