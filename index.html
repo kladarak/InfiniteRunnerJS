@@ -2,41 +2,40 @@
 <html>
 
 <head>
-	<script type="text/javascript" src="maths.js"></script>
-	<script type="text/javascript" src="vector.js"></script>
-	<script type="text/javascript" src="rect.js"></script>
-	<script type="text/javascript" src="camera.js"></script>
+	<script type="text/javascript" src="Source/Utils/maths.js"></script>
+	<script type="text/javascript" src="Source/Utils/vector.js"></script>
+	<script type="text/javascript" src="Source/Utils/rect.js"></script>
+	<script type="text/javascript" src="Source/Utils/camera.js"></script>
 	
-	<script type="text/javascript" src="sprite.js"></script>
-	<script type="text/javascript" src="animatedSprite.js"></script>
-	<script type="text/javascript" src="animatedModel.js"></script>
-	<script type="text/javascript" src="characterModel.js"></script>
-	<script type="text/javascript" src="enemyModelFactory.js"></script>
+	<script type="text/javascript" src="Source/Animation/sprite.js"></script>
+	<script type="text/javascript" src="Source/Animation/animatedSprite.js"></script>
+	<script type="text/javascript" src="Source/Animation/animatedModel.js"></script>
+	<script type="text/javascript" src="Source/Animation/characterModel.js"></script>
+	<script type="text/javascript" src="Source/Animation/enemyModelFactory.js"></script>
 	
-	<script type="text/javascript" src="resources.js"></script>
-	<script type="text/javascript" src="renderer.js"></script>
+	<script type="text/javascript" src="Source/GameObjects/scorePopUp.js"></script>
+	<script type="text/javascript" src="Source/GameObjects/fruit.js"></script>
+	<script type="text/javascript" src="Source/GameObjects/platform.js"></script>
+	<script type="text/javascript" src="Source/GameObjects/player.js"></script>
 	
-	<script type="text/javascript" src="scorePopUp.js"></script>
-	<script type="text/javascript" src="platform.js"></script>
-	<script type="text/javascript" src="fruit.js"></script>
-	<script type="text/javascript" src="environmentDecorations.js"></script>
-	<script type="text/javascript" src="environmentGenerator.js"></script>
-	<script type="text/javascript" src="parallaxWater.js"></script>
+	<script type="text/javascript" src="Source/Environment/environmentDecorations.js"></script>
+	<script type="text/javascript" src="Source/Environment/environmentGenerator.js"></script>
+	<script type="text/javascript" src="Source/Environment/parallaxWater.js"></script>
 	
-	<script type="text/javascript" src="player.js"></script>
+	<script type="text/javascript" src="Source/UI/gameOverScreen.js"></script>
+	<script type="text/javascript" src="Source/UI/scoreDisplay.js"></script>
+	<script type="text/javascript" src="Source/UI/characterSelectScreen.js"></script>
 	
-	<script type="text/javascript" src="gameOverScreen.js"></script>
-	<script type="text/javascript" src="scoreDisplay.js"></script>
-	<script type="text/javascript" src="characterSelectScreen.js"></script>
+	<script type="text/javascript" src="Source/StateMachine/stateMachine.js"></script>
+	<script type="text/javascript" src="Source/StateMachine/loadingState.js"></script>
+	<script type="text/javascript" src="Source/StateMachine/selectCharacterState.js"></script>
+	<script type="text/javascript" src="Source/StateMachine/playingGameState.js"></script>
+	<script type="text/javascript" src="Source/StateMachine/gameOverState.js"></script>
+	<script type="text/javascript" src="Source/StateMachine/gameStateMachine.js"></script>
 	
-	<script type="text/javascript" src="StateMachine/stateMachine.js"></script>
-	<script type="text/javascript" src="StateMachine/loadingState.js"></script>
-	<script type="text/javascript" src="StateMachine/selectCharacterState.js"></script>
-	<script type="text/javascript" src="StateMachine/playingGameState.js"></script>
-	<script type="text/javascript" src="StateMachine/gameOverState.js"></script>
-	<script type="text/javascript" src="StateMachine/gameStateMachine.js"></script>
-	
-	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="Source/resources.js"></script>
+	<script type="text/javascript" src="Source/renderer.js"></script>
+	<script type="text/javascript" src="Source/main.js"></script>
 </head>
 
 <body onload="main();" onkeydown="onKeyDown(event)", onkeyup="onKeyUp(event)">
