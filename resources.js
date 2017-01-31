@@ -47,13 +47,13 @@ function createAnimalSpriteSets(assetPath)
 
 function Resources()
 {
-	var tilesAssetPath		= "freetileset/png/Tiles/";
-	var bgAssetPath			= "freetileset/png/BG/";
-	var envDecorAssetPath	= "freetileset/png/Object/";
-	var catAssetPath		= "catndog/png/cat/";
-	var dogAssetPath		= "catndog/png/dog/";
-	var fruitAssetPath		= "cake_128/";
-	var enemiesAssetPath	= "Enemies/";
+	var tilesAssetPath		= "Resources/Environment/Tiles/";
+	var bgAssetPath			= "Resources/Environment/BG/";
+	var envDecorAssetPath	= "Resources/Environment/Object/";
+	var catAssetPath		= "Resources/Characters/cat/";
+	var dogAssetPath		= "Resources/Characters/dog/";
+	var fruitAssetPath		= "Resources/Collectables/";
+	var enemiesAssetPath	= "Resources/Enemies/";
 	
 	this.background			= createImage(bgAssetPath + "BG.png");
 	
