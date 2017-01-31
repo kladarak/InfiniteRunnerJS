@@ -10,48 +10,32 @@ var characterModelStates =
 	walk: "walk",
 };
 
-function CharacterModel(characterResources)
+function CharacterModelFactory(resources)
 {
-	this.state = characterModelStates.idle;
-	
-	this.rect = new Rect(0, 0, 50, 50);
-	
-	var loop = true;
-	var playonce = false;
-	
-	this.animations = {};
-	this.animations.dead 	= new AnimatedSprite( characterResources.dead, playonce	);
-	this.animations.fall 	= new AnimatedSprite( characterResources.fall, playonce	);
-	this.animations.hurt 	= new AnimatedSprite( characterResources.hurt, playonce	);
-	this.animations.idle 	= new AnimatedSprite( characterResources.idle, loop	);
-	this.animations.jump 	= new AnimatedSprite( characterResources.jump, playonce	);
-	this.animations.run		= new AnimatedSprite( characterResources.run,  loop );
-	this.animations.dead	= new AnimatedSprite( characterResources.dead, playonce	);
-	this.animations.walk	= new AnimatedSprite( characterResources.walk, loop	);
-	
-	this.getCurrentAnimation = function()
+	var createAnimationSet = function(animationResources)
 	{
-		return this.animations[this.state];
+		var loop = true;
+		var playonce = false;
+		var animations = {};
+		
+		animations.dead 	= new AnimatedSprite( animationResources.dead, playonce	);
+		animations.fall 	= new AnimatedSprite( animationResources.fall, playonce	);
+		animations.hurt 	= new AnimatedSprite( animationResources.hurt, playonce	);
+		animations.idle 	= new AnimatedSprite( animationResources.idle, loop	);
+		animations.jump 	= new AnimatedSprite( animationResources.jump, playonce	);
+		animations.run		= new AnimatedSprite( animationResources.run,  loop );
+		animations.dead		= new AnimatedSprite( animationResources.dead, playonce	);
+		animations.walk		= new AnimatedSprite( animationResources.walk, loop	);
+		
+		return animations;
 	};
 	
-	this.setState = function(state)
+	var createModel = function(animationResources)
 	{
-		if (this.state !== state)
-		{
-			this.state = state;
-			this.getCurrentAnimation().reset();
-		}
+		var animSet = createAnimationSet(animationResources);
+		return new AnimatedModel(animSet, characterModelStates.idle);
 	};
 	
-	this.update = function(world)
-	{
-		this.getCurrentAnimation().update(world);
-	};
-	
-	this.draw = function(renderer)
-	{
-		var anim = this.getCurrentAnimation();
-		anim.rect = this.rect;
-		anim.draw(renderer);
-	};
+	this.createCatModel = function() { return createModel(resources.cat); };
+	this.createDogModel = function() { return createModel(resources.dog); };
 };

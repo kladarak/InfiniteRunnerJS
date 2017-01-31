@@ -46,8 +46,9 @@ function init()
 	world.background.rect.width = 1000;
 	world.background.rect.height = 750;
 	
-	world.catModel = new CharacterModel(world.resources.cat);
-	world.dogModel = new CharacterModel(world.resources.dog);
+	var characterModelFactory = new CharacterModelFactory(world.resources);
+	world.catModel = characterModelFactory.createCatModel();
+	world.dogModel = characterModelFactory.createDogModel();
 	world.selectedModel = world.catModel;
 	
 	gameStateMachine = createGameStateMachine(world);
