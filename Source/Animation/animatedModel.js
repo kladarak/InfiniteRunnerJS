@@ -11,7 +11,7 @@ function AnimatedModel(animationSet, initialState)
 	
 	this.setState = function(state)
 	{
-		if (this.state !== state && this.animations[state] !== undefined)
+		if (this.state !== state && this.animations[state])
 		{
 			this.state = state;
 			this.getCurrentAnimation().reset();

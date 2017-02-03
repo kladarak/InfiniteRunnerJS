@@ -9,6 +9,7 @@ function EnvironmentGenerator(gameContext)
 	var groundFactory	= new PlatformFactory(gameContext.resources.ground);
 	var fruitFactory	= new FruitFactory(gameContext.resources.fruit);
 	var envDecorFactory = new EnvironmentDecorationFactory(gameContext.resources.envDecor);
+	var enemeyFactory	= new EnemyModelFactory(gameContext.resources.enemies);
 	
 	var generatedX			= viewport.width;
 	var defaultMinGapSize	= 50;
@@ -97,6 +98,32 @@ function EnvironmentGenerator(gameContext)
 		}
 	};
 	
+	var createEnemy = function(ground)
+	{
+		var enemySize = 50;
+		
+		var patrolPoints = [];
+		var patrolPoint1 = new Vector(ground.rect.left(), ground.rect.top() - enemySize);
+		var patrolPoint2 = new Vector(ground.rect.right() - enemySize, ground.rect.top() - enemySize);
+		
+		patrolPoints.push(patrolPoint1);
+		patrolPoints.push(patrolPoint2);
+		
+		var enemyModel = enemeyFactory.createRandomLandMonster();
+		var enemy = new Enemy(enemyModel, patrolPoints);
+		
+		enemy.rect.pos.x = getRandomFloat(patrolPoint1.x, patrolPoint2.x);
+		enemy.rect.pos.y = patrolPoint1.y;
+		enemy.rect.width = enemySize;
+		enemy.rect.height = enemySize;
+		
+		enemy.patrolPointIndex = getRandomInt(0, patrolPoints.length);
+		
+		enemy.setState(enemyStates.walk);
+		
+		world.objects.push(enemy);
+	};
+	
 	this.update = function()
 	{
 		if (!shouldCreateAnotherSection())
@@ -133,6 +160,7 @@ function EnvironmentGenerator(gameContext)
 			
 			addDecorations(ground);
 			createFruitOnPlatform(ground);
+			createEnemy(ground);
 			
 			generatedX = Math.max(ground.rect.right(), generatedX);
 		}

@@ -6,7 +6,7 @@ var enemyModelStates =
 	hit: "hit",
 };
 
-function EnemyModelFactory(resources)
+function EnemyModelFactory(enemyResources)
 {
 	var createAnimationSet = function(animRes)
 	{
@@ -28,7 +28,7 @@ function EnemyModelFactory(resources)
 		return new AnimatedModel(animSet, state);
 	};
 	
-	var enemies = resources.enemies;
+	var enemies = enemyResources;
 	
 	this.createBatModel				= function() { return createModel(enemies.bat); };
 	this.createDragonModel			= function() { return createModel(enemies.dragon); };
@@ -51,4 +51,22 @@ function EnemyModelFactory(resources)
 	this.createRedBirdModel			= function() { return createModel(enemies.redBird); };
 	this.createRockMonsterModel		= function() { return createModel(enemies.rockMonster); };
 	this.createWormMonsterModel		= function() { return createModel(enemies.wormMonster); };
+	
+	var landMonsterFuncs = [];
+	landMonsterFuncs.push(this.createBlueMonsterModel);
+	landMonsterFuncs.push(this.createGooseberryModel);
+	landMonsterFuncs.push(this.createGreenMonsterModel);
+	landMonsterFuncs.push(this.createGreyBlobMonsterModel);
+	landMonsterFuncs.push(this.createIceMonsterModel);
+	landMonsterFuncs.push(this.createOrangeMonsterModel);
+	landMonsterFuncs.push(this.createOrangeSpiderModel);
+	landMonsterFuncs.push(this.createPinkMonsterModel);
+	landMonsterFuncs.push(this.createRockMonsterModel);
+	landMonsterFuncs.push(this.createWormMonsterModel);
+			
+	this.createRandomLandMonster = function()
+	{
+		var index = getRandomInt(0, landMonsterFuncs.length);
+		return landMonsterFuncs[index]();
+	};
 }
