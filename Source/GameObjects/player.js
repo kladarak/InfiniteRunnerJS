@@ -91,16 +91,9 @@ function Player(characterModel)
 	{
 		this.xDirection = 0;
 	};
-				
-	this.update = function(gameContext)
+	
+	this.updateVelocity = function()
 	{
-		if (!this.isAlive)
-		{
-			return;
-		}
-		
-		var world = gameContext.world;
-		
 		if (this.xDirection === 0)
 		{
 			if (Math.abs(this.xVel) > playerConstants.stopDecel)
@@ -121,49 +114,73 @@ function Player(characterModel)
 			this.xVel = clamp(this.xVel, -playerConstants.maxXVelocity, playerConstants.maxXVelocity);
 		}
 		
-		this.rect.pos.x += this.xVel;
-		this.rect.pos.x = Math.max(this.rect.pos.x, world.camera.pos.x);
-		
 		var gravity = this.isJumping() ? playerConstants.jumpGravity : playerConstants.normalGravity;
 				
 		this.yVel += gravity;
 		this.yVel = Math.min(this.yVel, playerConstants.maxYVelocity);
-		
+	}
+	
+	this.findPlatformPlayerIsStandingOn = function(gameContext)
+	{
 		var prevBotY = this.rect.bottom();
 		var nextBotY = prevBotY + this.yVel;
 		var centreX = this.rect.centreX();
 		
-		var runningOnPlatform = null;
+		var highestPlatform = null;
 		
-		for (platform of world.platforms)
+		for (platform of gameContext.world.platforms)
 		{
 			if (centreX >= platform.rect.left() && centreX <= platform.rect.right())
 			{
 				// check if bottom of player falls through platform
 				if (prevBotY <= platform.rect.top() && nextBotY >= platform.rect.top())
 				{
-					runningOnPlatform = platform;
+					// Select this platform if it's the first we've collided with, or if it is higher than the last one we found.
+					if (highestPlatform === null || highestPlatform.rect.top() > platform.rect.top())
+					{
+						highestPlatform = platform;
+					}
 				}
 			}
 		}
 		
-		if (runningOnPlatform)
+		return highestPlatform;
+	}
+	
+	this.update = function(gameContext)
+	{
+		if (!this.isAlive)
 		{
+			return;
+		}
+		
+		this.updateVelocity();
+		
+		this.rect.pos.x += this.xVel;
+		
+		// prevent player from running off of the left of screen
+		this.rect.pos.x = Math.max(this.rect.pos.x, gameContext.world.camera.pos.x);
+		
+		var standingOnPlatform = this.findPlatformPlayerIsStandingOn(gameContext);
+		
+		if (standingOnPlatform)
+		{
+			this.rect.pos.y = standingOnPlatform.rect.top() - this.rect.height;
+			this.yVel = 0;
+			this.jumpCount = 0;
+			
 			var hasStopped = (this.xVel === 0) && (this.xDirection === 0);
 			var nextState = hasStopped ? playerStates.idle : playerStates.run;
 			this.setState( nextState );
-			this.rect.pos.y = runningOnPlatform.rect.top() - this.rect.height;
-			this.yVel = 0;
-			this.jumpCount = 0;
 		}
 		else
 		{
+			this.rect.pos.y += this.yVel;
+			
 			if (this.state !== playerStates.jump || this.yVel >= -2)
 			{
 				this.setState( playerStates.fall );
 			}
-			
-			this.rect.pos.y = nextBotY - this.rect.height;
 		}
 		
 		this.isAlive = this.rect.pos.y < gameContext.deathY;
