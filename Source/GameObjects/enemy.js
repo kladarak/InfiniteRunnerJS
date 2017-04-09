@@ -81,6 +81,14 @@ function Enemy(enemyModel, patrolPoints)
 		pos.init(newPos.x, newPos.y, newPos.z);
 	};
 	
+	this.tryToAttackPlayer = function(gameContext)
+	{
+		if (gameContext.world.player.rect.overlaps(this.rect))
+		{
+			gameContext.world.player.takeDamage();
+		}
+	};
+	
 	this.updateDeathAnimation = function()
 	{
 		this.rect.pos.y += 2.0;
@@ -91,6 +99,7 @@ function Enemy(enemyModel, patrolPoints)
 		if (this.isAlive)
 		{
 			this.updatePatrol();
+			this.tryToAttackPlayer(gameContext);
 		}
 		else
 		{

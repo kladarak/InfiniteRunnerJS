@@ -4,6 +4,7 @@ var playerStates =
 	run: "run",
 	jump: "jump",
 	fall: "fall",
+	dead: "dead",
 };
 
 var playerConstants =
@@ -16,26 +17,27 @@ var playerConstants =
 	enemyKilledThrust: -5,
 	moveAccel: 0.15,
 	stopDecel: 0.5,
+	deathFrameCount: 100,
 };
 
 var playerSizeMetrics =
 {
 	initialX: 100,
 	initialY: 100,
-	width: 100,
-	height: 100,
+	width: 30,
+	height: 90,
 	
-	boundingXOffset: 30,
-	boundingYOffset: 0,
-	boundingWidth: 30,
-	boundingHeight: 100,
+	renderXOffset: -30,
+	renderYOffset: -6,
+	renderWidth: 100,
+	renderHeight: 100,
 };
 
 function Player(characterModel)
 {
 	this.rect = new Rect();
-	this.boundingRect = new Rect();
 	this.isAlive = true;
+	this.dyingFrameCount = 0;
 
 	this.state = playerStates.idle;
 	this.model = characterModel;
@@ -51,16 +53,6 @@ function Player(characterModel)
 	this.rect.width = playerSizeMetrics.width;
 	this.rect.height = playerSizeMetrics.height;
 	
-	this.refreshBoundingRect = function()
-	{
-		this.boundingRect.pos.x		= this.rect.pos.x + playerSizeMetrics.boundingXOffset;
-		this.boundingRect.pos.y		= this.rect.pos.y + playerSizeMetrics.boundingYOffset;
-		this.boundingRect.width		= playerSizeMetrics.boundingWidth;
-		this.boundingRect.height	= playerSizeMetrics.boundingHeight;;
-	};
-	
-	this.refreshBoundingRect();
-	
 	this.setState = function(state)
 	{
 		this.state = state;
@@ -73,6 +65,7 @@ function Player(characterModel)
 				case playerStates.run:	return characterModelStates.run;
 				case playerStates.jump: return characterModelStates.jump;
 				case playerStates.fall: return characterModelStates.fall;
+				case playerStates.dead: return characterModelStates.dead;
 			}
 			
 			return characterModelStates.idle;
@@ -81,13 +74,20 @@ function Player(characterModel)
 		this.model.setState( getNewCharacterModelState() );
 	};
 	
+	this.isDying = function()
+	{
+		return this.state === playerStates.dead;
+	};
+	
 	this.canJump = function()
 	{
-		return (this.jumpCount < 2);
+		return (this.jumpCount < 2) && !this.isDying();
 	};
 	
 	this.setJumping = function(isJumping)
 	{
+		if (this.isDying()) { return; }
+		
 		if (isJumping && this.canJump())
 		{
 			this.yVel = playerConstants.jumpThrust;
@@ -107,19 +107,30 @@ function Player(characterModel)
 	
 	this.moveLeft = function()
 	{
+		if (this.isDying()) { return; }
+		
 		this.xDirection = -1;
 		this.facingRight = false;
 	};
 	
 	this.moveRight = function()
 	{
+		if (this.isDying()) { return; }
+		
 		this.xDirection = 1;
 		this.facingRight = true;
 	};
 	
 	this.stopMoving = function()
 	{
+		if (this.isDying()) { return; }
+		
 		this.xDirection = 0;
+	};
+	
+	this.takeDamage = function()
+	{
+		this.setState( playerStates.dead );
 	};
 	
 	this.updateVelocity = function()
@@ -150,79 +161,28 @@ function Player(characterModel)
 		this.yVel = Math.min(this.yVel, playerConstants.maxYVelocity);
 	};
 	
-	var findObjectsOverlappingRect = function(objects, rect)
-	{
-		return objects.filter(function(o)
-		{
-			return o.rect.overlaps(rect);
-		});
-	};
-	
-	var findObjectsWhoseTopOverlapRect = function(objects, rect)
-	{
-		return objects.filter(function(o)
-		{
-			// similar to rect.overlaps, except we only consider the top of the object for y axis checks.
-			return o.rect.left() < rect.right()
-				&& o.rect.right() > rect.left()
-				&& o.rect.top() <= rect.bottom()
-				&& o.rect.top() >= rect.top();
-		});
-	};
-	
-	var selectHighestObject = function(objects)
-	{
-		var highestObject = null;
-		
-		for (object of objects)
-		{
-			if (highestObject === null || highestObject.rect.top() > object.rect.top())
-			{
-				highestObject = object;
-			}
-		}
-		
-		return highestObject;
-	};
-	
 	this.findPlatformPlayerIsStandingOn = function(gameContext)
 	{
-		var bRect = this.boundingRect;
-		var rectToCollideWith = new Rect(bRect.left(), bRect.bottom(), bRect.width, this.yVel);
-		var platformsCollidedWith = findObjectsWhoseTopOverlapRect(gameContext.world.platforms, rectToCollideWith);
-		return selectHighestObject(platformsCollidedWith);
+		var rectToCollideWith = new Rect(this.rect.left(), this.rect.bottom(), this.rect.width, this.yVel);
+		var platformsCollidedWith = Physics.findObjectsWhoseTopOverlapRect(gameContext.world.platforms, rectToCollideWith);
+		return Physics.selectHighestObject(platformsCollidedWith);
 	}
 	
 	this.findEnemyPlayerHasSteppedOn = function(gameContext)
 	{
-		var bRect = this.boundingRect;
-		var rectToCollideWith = new Rect(bRect.left(), bRect.bottom(), bRect.width, this.yVel);
-		var enemiesSteppedOn = findObjectsWhoseTopOverlapRect(gameContext.world.enemies, rectToCollideWith);
-		return selectHighestObject(enemiesSteppedOn);
-	}
-		
-	this.findEnemyPlayerHasBumpedInto = function(gameContext)
-	{
-		var enemiesBumpedInto = findObjectsOverlappingRect(gameContext.world.enemies, this.boundingRect);
-		enemiesBumpedInto = enemiesBumpedInto.filter(function(e) { return e.isAlive;});
-		return (enemiesBumpedInto.length > 0) ? enemiesBumpedInto[0] : null;
+		var rectToCollideWith = new Rect(this.rect.left(), this.rect.bottom(), this.rect.width, this.yVel);
+		var enemiesSteppedOn = Physics.findObjectsWhoseTopOverlapRect(gameContext.world.enemies, rectToCollideWith);
+		return Physics.selectHighestObject(enemiesSteppedOn);
 	}
 	
-	this.update = function(gameContext)
+	this.updateWhenAlive = function(gameContext)
 	{
-		if (!this.isAlive)
-		{
-			return;
-		}
-		
 		this.updateVelocity();
 		
 		this.rect.pos.x += this.xVel;
 		
 		// prevent player from running off of the left of the screen
 		this.rect.pos.x = Math.max(this.rect.pos.x, gameContext.world.camera.pos.x);
-		
-		this.refreshBoundingRect();
 		
 		var standingOnPlatform	= this.findPlatformPlayerIsStandingOn(gameContext);
 		var steppedOnEnemy		= this.findEnemyPlayerHasSteppedOn(gameContext);
@@ -261,22 +221,40 @@ function Player(characterModel)
 			}
 		}
 		
-		this.refreshBoundingRect();
+		this.isAlive = (this.rect.pos.y < gameContext.deathY);
+	}
+	
+	this.updateWhenDying = function()
+	{
+		this.dyingFrameCount++;
 		
-		var killedByEnemy = this.findEnemyPlayerHasBumpedInto(gameContext);
-		
-		this.isAlive = (killedByEnemy === null) && (this.rect.pos.y < gameContext.deathY);
+		if (this.dyingFrameCount >= playerConstants.deathFrameCount)
+		{
+			this.isAlive = false;
+		}
+	};
+	
+	this.update = function(gameContext)
+	{
+		if (this.isDying())
+		{
+			this.updateWhenDying();
+		}
+		else
+		{
+			this.updateWhenAlive(gameContext);
+		}
 		
 		this.model.update();
 	}
 	
 	this.draw = function(renderer)
 	{
-		this.model.rect.pos.x = 0;
-		this.model.rect.pos.y = 0;
-		this.model.rect.width = this.rect.width;
-		this.model.rect.height = this.rect.height;
-			
+		this.model.rect.pos.x	= playerSizeMetrics.renderXOffset;
+		this.model.rect.pos.y	= playerSizeMetrics.renderYOffset;
+		this.model.rect.width	= playerSizeMetrics.renderWidth;
+		this.model.rect.height	= playerSizeMetrics.renderHeight;
+	
 		var ctx = renderer.context;
 		ctx.save();
 		
@@ -291,8 +269,8 @@ function Player(characterModel)
 		this.model.draw(renderer);
 
 		// Debug draw bounding rect
-		//ctx.strokeStyle = "red";
-		//ctx.strokeRect(playerSizeMetrics.boundingXOffset, playerSizeMetrics.boundingYOffset, this.boundingRect.width, this.boundingRect.height);
+		ctx.strokeStyle = "red";
+		ctx.strokeRect(0, 0, this.rect.width, this.rect.height);
 		
 		ctx.restore();
 	}
