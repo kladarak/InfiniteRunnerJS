@@ -18,8 +18,8 @@ function Enemy(enemyModel, patrolPoints)
 	this.patrolPoints		= patrolPoints || [];
 	this.patrolPointIndex	= 0;
 	this.rect				= new Rect(100, 200, 100, 100);
-	
-	this.facingRight = true;
+	this.isAlive			= true;
+	this.facingRight		= true;
 	
 	this.setState = function(state)
 	{
@@ -39,6 +39,16 @@ function Enemy(enemyModel, patrolPoints)
 		};
 		
 		this.model.setState( getNewCharacterModelState() );
+	};
+	
+	this.setKilled = function(isKilled)
+	{
+		this.isAlive = !isKilled;
+		
+		if (isKilled)
+		{
+			this.setState(enemyStates.hit);
+		}
 	};
 	
 	this.updatePatrol = function()
@@ -71,9 +81,22 @@ function Enemy(enemyModel, patrolPoints)
 		pos.init(newPos.x, newPos.y, newPos.z);
 	};
 	
+	this.updateDeathAnimation = function()
+	{
+		this.rect.pos.y += 2.0;
+	};
+	
 	this.update = function(gameContext)
 	{
-		this.updatePatrol();
+		if (this.isAlive)
+		{
+			this.updatePatrol();
+		}
+		else
+		{
+			this.updateDeathAnimation();
+		}
+		
 		this.model.update();
 	}
 	
@@ -83,17 +106,32 @@ function Enemy(enemyModel, patrolPoints)
 		this.model.rect.pos.y = 0;
 		this.model.rect.width = this.rect.width;
 		this.model.rect.height = this.rect.height;
-			
+		
+		var scale = {};
+		scale.x = 1;
+		scale.y = 1;
+		
+		var translation = {};
+		translation.x = this.rect.pos.x;
+		translation.y = this.rect.pos.y;
+		
+		if (this.facingRight)
+		{
+			scale.x = -1;
+			translation.x += this.rect.width;
+		}
+		
+		if (!this.isAlive)
+		{
+			scale.y = -1;
+			translation.y += this.rect.height;
+		}
+		
 		var ctx = renderer.context;
 		ctx.save();
 		
-		ctx.translate(this.rect.pos.x, this.rect.pos.y);
-			
-		if (this.facingRight)
-		{
-			ctx.scale(-1, 1);
-			ctx.translate(-this.rect.width, 0);
-		}
+		ctx.translate(translation.x, translation.y);
+		ctx.scale(scale.x, scale.y);
 		
 		this.model.draw(renderer);
 

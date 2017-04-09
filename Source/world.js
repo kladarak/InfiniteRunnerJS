@@ -2,6 +2,7 @@ function World()
 {
 	this.background = null;
 	this.platforms = [];
+	this.enemies = [];
 	this.objects = [];
 	this.player = null;
 	this.camera = new Camera();
@@ -16,11 +17,12 @@ function World()
 		});
 		
 		var objects = this.objects;
+		var isNotCulled = function(o) { return objects.includes(o); };
+		var isAlive		= function(o) { return o.isAlive; };
 		
-		this.platforms = this.platforms.filter(function(p)
-		{
-			return objects.includes(p);
-		});
+		this.platforms	= this.platforms.filter(isNotCulled);
+		this.enemies	= this.enemies.filter(isNotCulled);
+		this.enemies	= this.enemies.filter(isAlive);
 	};
 	
 	this.update = function(gameContext)

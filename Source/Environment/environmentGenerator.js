@@ -122,6 +122,7 @@ function EnvironmentGenerator(gameContext)
 		enemy.setState(enemyStates.walk);
 		
 		world.objects.push(enemy);
+		world.enemies.push(enemy);
 	};
 	
 	this.update = function()

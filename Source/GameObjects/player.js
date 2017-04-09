@@ -13,6 +13,7 @@ var playerConstants =
 	maxXVelocity: 6,
 	maxYVelocity: 6,
 	jumpThrust: -10,
+	enemyKilledThrust: -5,
 	moveAccel: 0.15,
 	stopDecel: 0.5,
 };
@@ -118,35 +119,61 @@ function Player(characterModel)
 				
 		this.yVel += gravity;
 		this.yVel = Math.min(this.yVel, playerConstants.maxYVelocity);
-	}
+	};
 	
-	this.findPlatformPlayerIsStandingOn = function(gameContext)
+	var findObjectsOverlappingRect = function(objects, rect)
 	{
-		var prevBotY = this.rect.bottom();
-		var nextBotY = prevBotY + this.yVel;
-		var centreX = this.rect.centreX();
-		
-		var highestPlatform = null;
-		
-		for (platform of gameContext.world.platforms)
+		return objects.filter(function(o)
 		{
-			if (centreX >= platform.rect.left() && centreX <= platform.rect.right())
+			return o.rect.overlaps(rect);
+		});
+	};
+	
+	var findObjectsWhoseTopOverlapRect = function(objects, rect)
+	{
+		return objects.filter(function(o)
+		{
+			// similar to rect.overlaps, except we only consider the top of the object for y axis checks.
+			return o.rect.left() < rect.right()
+				&& o.rect.right() > rect.left()
+				&& o.rect.top() <= rect.bottom()
+				&& o.rect.top() >= rect.top();
+		});
+	};
+	
+	var selectHighestObject = function(objects)
+	{
+		var highestObject = null;
+		
+		for (object of objects)
+		{
+			if (highestObject === null || highestObject.rect.top() > object.rect.top())
 			{
-				// check if bottom of player falls through platform
-				if (prevBotY <= platform.rect.top() && nextBotY >= platform.rect.top())
-				{
-					// Select this platform if it's the first we've collided with, or if it is higher than the last one we found.
-					if (highestPlatform === null || highestPlatform.rect.top() > platform.rect.top())
-					{
-						highestPlatform = platform;
-					}
-				}
+				highestObject = object;
 			}
 		}
 		
-		return highestPlatform;
+		return highestObject;
+	};
+	
+	this.findPlatformPlayerIsStandingOn = function(gameContext)
+	{
+		// We are considered standing on a platform if the bottom-centre of the player is about to pass through the top of a platform.
+		// So we choose a rect for the player to be a single pixel wide at the bottom centre of the player, and extended by the player's y velocity.
+		var rectToCollideWith = new Rect(this.rect.centreX(), this.rect.bottom(), 1, this.yVel);
+		var platformsCollidedWith = findObjectsWhoseTopOverlapRect(gameContext.world.platforms, rectToCollideWith);
+		return selectHighestObject(platformsCollidedWith);
 	}
 	
+	this.findEnemyPlayerHasSteppedOn = function(gameContext)
+	{
+		// If any part of the bottom of the player overlaps an enemey, then we haev stepped on it.
+		// So we choose a rect which is the full width of the player, and is extended by its velocity.
+		var rectToCollideWith = new Rect(this.rect.left(), this.rect.bottom(), this.rect.width, this.yVel);
+		var enemiesSteppedOn = findObjectsWhoseTopOverlapRect(gameContext.world.enemies, rectToCollideWith);
+		return selectHighestObject(enemiesSteppedOn);
+	}
+		
 	this.update = function(gameContext)
 	{
 		if (!this.isAlive)
@@ -158,12 +185,27 @@ function Player(characterModel)
 		
 		this.rect.pos.x += this.xVel;
 		
-		// prevent player from running off of the left of screen
+		// prevent player from running off of the left of the screen
 		this.rect.pos.x = Math.max(this.rect.pos.x, gameContext.world.camera.pos.x);
 		
-		var standingOnPlatform = this.findPlatformPlayerIsStandingOn(gameContext);
+		var standingOnPlatform	= this.findPlatformPlayerIsStandingOn(gameContext);
+		var steppedOnEnemy		= this.findEnemyPlayerHasSteppedOn(gameContext);
 		
-		if (standingOnPlatform)
+		var killEnemy = (steppedOnEnemy !== null) && ((standingOnPlatform === null) || (steppedOnEnemy.rect.top() < standingOnPlatform.rect.top()));
+		
+		if (killEnemy)
+		{
+			this.rect.pos.y = steppedOnEnemy.rect.top() - this.rect.height;
+			this.yVel = playerConstants.enemyKilledThrust;
+			this.setState( playerStates.jump );
+			
+			steppedOnEnemy.setKilled(true);
+			
+			var scorePopUp = new ScorePopUp(250, this.rect.centre());
+			gameContext.world.objects.push(scorePopUp);
+			gameContext.playerProfile.score += 250;
+		}
+		else if (standingOnPlatform)
 		{
 			this.rect.pos.y = standingOnPlatform.rect.top() - this.rect.height;
 			this.yVel = 0;
