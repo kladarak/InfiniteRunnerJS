@@ -18,9 +18,23 @@ var playerConstants =
 	stopDecel: 0.5,
 };
 
+var playerSizeMetrics =
+{
+	initialX: 100,
+	initialY: 100,
+	width: 100,
+	height: 100,
+	
+	boundingXOffset: 30,
+	boundingYOffset: 0,
+	boundingWidth: 30,
+	boundingHeight: 100,
+};
+
 function Player(characterModel)
 {
-	this.rect = new Rect(100, 200, 100, 100);
+	this.rect = new Rect();
+	this.boundingRect = new Rect();
 	this.isAlive = true;
 
 	this.state = playerStates.idle;
@@ -31,6 +45,21 @@ function Player(characterModel)
 	this.jumpCount = 0;
 	this.xDirection = 0;
 	this.facingRight = true;
+	
+	this.rect.pos.x = playerSizeMetrics.initialX;
+	this.rect.pos.y = playerSizeMetrics.initialY;
+	this.rect.width = playerSizeMetrics.width;
+	this.rect.height = playerSizeMetrics.height;
+	
+	this.refreshBoundingRect = function()
+	{
+		this.boundingRect.pos.x		= this.rect.pos.x + playerSizeMetrics.boundingXOffset;
+		this.boundingRect.pos.y		= this.rect.pos.y + playerSizeMetrics.boundingYOffset;
+		this.boundingRect.width		= playerSizeMetrics.boundingWidth;
+		this.boundingRect.height	= playerSizeMetrics.boundingHeight;;
+	};
+	
+	this.refreshBoundingRect();
 	
 	this.setState = function(state)
 	{
@@ -158,22 +187,27 @@ function Player(characterModel)
 	
 	this.findPlatformPlayerIsStandingOn = function(gameContext)
 	{
-		// We are considered standing on a platform if the bottom-centre of the player is about to pass through the top of a platform.
-		// So we choose a rect for the player to be a single pixel wide at the bottom centre of the player, and extended by the player's y velocity.
-		var rectToCollideWith = new Rect(this.rect.centreX(), this.rect.bottom(), 1, this.yVel);
+		var bRect = this.boundingRect;
+		var rectToCollideWith = new Rect(bRect.left(), bRect.bottom(), bRect.width, this.yVel);
 		var platformsCollidedWith = findObjectsWhoseTopOverlapRect(gameContext.world.platforms, rectToCollideWith);
 		return selectHighestObject(platformsCollidedWith);
 	}
 	
 	this.findEnemyPlayerHasSteppedOn = function(gameContext)
 	{
-		// If any part of the bottom of the player overlaps an enemey, then we haev stepped on it.
-		// So we choose a rect which is the full width of the player, and is extended by its velocity.
-		var rectToCollideWith = new Rect(this.rect.left(), this.rect.bottom(), this.rect.width, this.yVel);
+		var bRect = this.boundingRect;
+		var rectToCollideWith = new Rect(bRect.left(), bRect.bottom(), bRect.width, this.yVel);
 		var enemiesSteppedOn = findObjectsWhoseTopOverlapRect(gameContext.world.enemies, rectToCollideWith);
 		return selectHighestObject(enemiesSteppedOn);
 	}
 		
+	this.findEnemyPlayerHasBumpedInto = function(gameContext)
+	{
+		var enemiesBumpedInto = findObjectsOverlappingRect(gameContext.world.enemies, this.boundingRect);
+		enemiesBumpedInto = enemiesBumpedInto.filter(function(e) { return e.isAlive;});
+		return (enemiesBumpedInto.length > 0) ? enemiesBumpedInto[0] : null;
+	}
+	
 	this.update = function(gameContext)
 	{
 		if (!this.isAlive)
@@ -187,6 +221,8 @@ function Player(characterModel)
 		
 		// prevent player from running off of the left of the screen
 		this.rect.pos.x = Math.max(this.rect.pos.x, gameContext.world.camera.pos.x);
+		
+		this.refreshBoundingRect();
 		
 		var standingOnPlatform	= this.findPlatformPlayerIsStandingOn(gameContext);
 		var steppedOnEnemy		= this.findEnemyPlayerHasSteppedOn(gameContext);
@@ -225,7 +261,11 @@ function Player(characterModel)
 			}
 		}
 		
-		this.isAlive = this.rect.pos.y < gameContext.deathY;
+		this.refreshBoundingRect();
+		
+		var killedByEnemy = this.findEnemyPlayerHasBumpedInto(gameContext);
+		
+		this.isAlive = (killedByEnemy === null) && (this.rect.pos.y < gameContext.deathY);
 		
 		this.model.update();
 	}
@@ -250,6 +290,10 @@ function Player(characterModel)
 		
 		this.model.draw(renderer);
 
+		// Debug draw bounding rect
+		//ctx.strokeStyle = "red";
+		//ctx.strokeRect(playerSizeMetrics.boundingXOffset, playerSizeMetrics.boundingYOffset, this.boundingRect.width, this.boundingRect.height);
+		
 		ctx.restore();
 	}
 }

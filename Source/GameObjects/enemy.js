@@ -135,6 +135,10 @@ function Enemy(enemyModel, patrolPoints)
 		
 		this.model.draw(renderer);
 
+		// Debug draw bounding rect
+		//ctx.strokeStyle = "red";
+		//ctx.strokeRect(0, 0, this.rect.width, this.rect.height);
+		
 		ctx.restore();
 	}
 }
