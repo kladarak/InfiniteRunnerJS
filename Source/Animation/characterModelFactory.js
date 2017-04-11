@@ -30,7 +30,7 @@ function CharacterModelFactory(resources)
 		animations.idle 	= new AnimatedSprite( animationResources.idle, loop	);
 		animations.jump 	= new AnimatedSprite( animationResources.jump, playonce	);
 		animations.run		= new AnimatedSprite( animationResources.run,  loop );
-		animations.dead		= new AnimatedSprite( animationResources.dead, playonce	);
+		animations.slide	= new AnimatedSprite( animationResources.slide, playonce );
 		animations.walk		= new AnimatedSprite( animationResources.walk, loop	);
 		
 		return animations;
