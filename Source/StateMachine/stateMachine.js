@@ -36,6 +36,19 @@ function StateMachine()
 		}
 	}
 	
+	this.checkTransitions = function()
+	{
+		for (transition of this.transitions)
+		{
+			if (transition.fromState === this.currentState && transition.condition())
+			{
+				return transition.toState;
+			}
+		}
+		
+		return null;
+	};
+	
 	this.update = function(gameContext)
 	{
 		// If currentState is null, set it to the first one (if possible)
@@ -53,24 +66,34 @@ function StateMachine()
 			return;
 		}
 		
-		// Update state and check transitions.
-		// If a transition's condition is valid,
-		// change state and update again.
+		// Check transitions; if its condition is valid, change state and start loop again.
+		// Then update state and check transitions again.
+		// Keep doing this until the state does not change.
+		// In most cases, this loop will simply find that no transitions are valid to be taken and will update the current state once.
 		
 		var lastUpdatedState = null;
 		
 		while (lastUpdatedState !== this.currentState)
 		{
-			this.currentState.update(gameContext);
 			lastUpdatedState = this.currentState;
 			
-			for (transition of this.transitions)
+			// Check transitions before and after state update;
+			// If a transition succeeds before the state updates, go back to beginning of loop and check again.
+			// In this way, many transitions may be taken before updating a state.
+			
+			var nextState = this.checkTransitions();
+			if (nextState)
 			{
-				if (transition.fromState === this.currentState && transition.condition())
-				{
-					this.setCurrentState(transition.toState, gameContext);
-					break;
-				}
+				this.setCurrentState(nextState, gameContext);
+				continue;
+			}
+			
+			this.currentState.update(gameContext);
+			
+			nextState = this.checkTransitions();
+			if (nextState)
+			{
+				this.setCurrentState(nextState, gameContext);
 			}
 		}
 	}
